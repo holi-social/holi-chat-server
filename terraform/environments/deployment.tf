@@ -47,6 +47,11 @@ resource "google_cloud_run_service" "chat_host" {
           value = local.environment
         }
         env {
+          name  = "HOLI_CHAT_SERVER_NAME"
+          value = local.environment_name == "production" ? "chat.holi.social" : "development.holi.chat.social" # TODO: choose a server name 
+        }
+
+        env {
           name = "HOLI_CHAT_DB_HOST"
           value_from {
             secret_key_ref {
