@@ -1,3 +1,4 @@
+export HOLI_CHAT_SERVER_NAME="local.chat.project-holi.org"
 export HOLI_CHAT_DB_HOST="db"
 export HOLI_CHAT_DB_NAME="chat-db"
 export HOLI_CHAT_DB_USER="postgres"

@@ -1,4 +1,4 @@
-server_name: "local.chat.project-holi.org"
+server_name: ${HOLI_CHAT_SERVER_NAME}
 pid_file: /data/homeserver.pid
 listeners:
   - port: 8008
@@ -32,7 +32,7 @@ oidc_providers:
         display_name_template: "{{ user.name }}"
     backchannel_logout_enabled: true # Optional
 
-log_config: "/data/local.chat.project-holi.org.log.config"
+log_config: "/data/holi.chat.server.log.config"
 media_store_path: /data/media_store
 registration_shared_secret: ${HOLI_CHAT_REGISTRATION_SHARED_SECRET}
 report_stats: true
