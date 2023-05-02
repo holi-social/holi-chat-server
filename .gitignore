@@ -1,0 +1,4 @@
+.envrc.local
+homeserver.yaml
+media_store
+*.key

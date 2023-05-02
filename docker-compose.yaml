@@ -1,0 +1,65 @@
+version: "3"
+
+services:
+  traefik:
+    image: traefik:v2.9.1
+    networks:
+      chat-net:
+        aliases:
+          - local.chat.project-holi.org
+    command:
+      - "--entryPoints.http.address=:80"
+      - "--entryPoints.http.http.redirections.entryPoint.to=https"
+      - "--entryPoints.http.http.redirections.entryPoint.scheme=https"
+      - "--entryPoints.https.address=:443"
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "--providers.docker.exposedByDefault=false"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      - "traefik.http.routers.traefik.entrypoints=https"
+      - "traefik.http.routers.traefik.rule=Host(`local.traefik.chat.project-holi.org`)"
+      - "traefik.http.routers.traefik.middlewares=traefik-auth"
+      - "traefik.http.routers.traefik.tls.certresolver=http"
+      - "traefik.http.routers.traefik.service=api@internal"
+  synapse:
+    image: matrixdotorg/synapse
+    restart: always
+    volumes:
+      - ./data:/data
+    ports:
+      - 8008:8008
+      - 8009:8009
+      - 8448:8448
+    networks:
+      - chat-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ocis.entrypoints=https"
+      - "traefik.http.routers.ocis.rule=Host(`local.chat.project-holi.org`)"
+      - "traefik.http.routers.ocis.tls.certresolver=http"
+      - "traefik.http.routers.ocis.service=ocis"
+      - "traefik.http.services.ocis.loadbalancer.server.port=8008"
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - chat-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${HOLI_CHAT_DB_USER}
+      - POSTGRES_PASSWORD=${HOLI_CHAT_DB_PASSWORD}
+      - POSTGRES_DB=${HOLI_CHAT_DB_NAME}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    ports:
+      - 5432:5432
+    networks:
+      - chat-net
+
+volumes:
+  chat-db:
+
+networks:
+  chat-net:
