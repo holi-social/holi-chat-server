@@ -1,6 +1,6 @@
 # Holi Chat Server
 
-Holi Chat Server is a Matrix Synapse chat server application that allows users to communicate with each other in real-time.
+Holi Chat Server is a [Matrix Synapse](https://matrix-org.github.io/synapse/latest/) chat server application that allows holi users to communicate with each other in real-time.
 
 ## Installation:
 
