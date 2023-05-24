@@ -16,10 +16,11 @@ To run Holi Chat Server locally, follow these steps:
 
 This will generate a default configuration file for your server.
 
-4. Start the server by running the following command:
+4. Add [local.chat.holi.social] to your `/etc/hosts`
+5. Start the server by running the following command:
 
 ```
 docker-compose up -d
 ```
 
-This will start the server in the background and you can access the application by navigating to `http://localhost:8008` in your web browser.
+This will start the server in the background and you can access the application by navigating to `https://local.chat.holi.social` in your web browser.
