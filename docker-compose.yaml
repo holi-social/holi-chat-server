@@ -15,8 +15,8 @@ services:
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
       - "--providers.docker.exposedByDefault=false"
     ports:
-      - "80:80"
-      - "443:443"
+      - "81:80"
+      - "444:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     labels:
@@ -54,7 +54,7 @@ services:
       - POSTGRES_DB=${HOLI_CHAT_DB_NAME}
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
     ports:
-      - 5432:5432
+      - 5434:5432
     networks:
       - chat-net
 

@@ -48,9 +48,12 @@ resource "google_cloud_run_service" "chat_host" {
         }
         env {
           name  = "HOLI_CHAT_SERVER_NAME"
-          value = local.environment_name == "production" ? "chat.holi.social" : "development.chat.holi.social" # TODO: choose a server name 
+          value = local.environment_name == "production" ? "https://chat.holi.social" : "https://development.chat.holi.social"
         }
-
+        env {
+          name  = "ORY_BASE_URL"
+          value = local.environment_name == "production" ? "https://auth.holi.social" : "https://dev-auth.holi.social"
+        }
         env {
           name = "HOLI_CHAT_DB_HOST"
           value_from {
@@ -88,29 +91,20 @@ resource "google_cloud_run_service" "chat_host" {
           }
         }
         env {
-          name = "HOLI_CHAT_OIDC_ISSUER"
+          name = "HOLI_CHAT_ORY_CLIENT_ID"
           value_from {
             secret_key_ref {
               key  = "latest"
-              name = local.environment_name == "production" ? "HOLI_CHAT_OIDC_ISSUER_PRODUCTION" : "HOLI_CHAT_OIDC_ISSUER_DEVELOPMENT"
+              name = local.environment_name == "production" ? "HOLI_CHAT_ORY_CLIENT_ID_PRODUCTION" : "HOLI_CHAT_ORY_CLIENT_ID_DEVELOPMENT"
             }
           }
         }
         env {
-          name = "HOLI_CHAT_OIDC_CLIENT_ID"
+          name = "HOLI_CHAT_ORY_CLIENT_SECRET"
           value_from {
             secret_key_ref {
               key  = "latest"
-              name = local.environment_name == "production" ? "HOLI_CHAT_OIDC_CLIENT_ID_PRODUCTION" : "HOLI_CHAT_OIDC_CLIENT_ID_DEVELOPMENT"
-            }
-          }
-        }
-        env {
-          name = "HOLI_CHAT_OIDC_CLIENT_SECRET"
-          value_from {
-            secret_key_ref {
-              key  = "latest"
-              name = local.environment_name == "production" ? "HOLI_CHAT_OIDC_CLIENT_SECRET_PRODUCTION" : "HOLI_CHAT_OIDC_CLIENT_SECRET_DEVELOPMENT"
+              name = local.environment_name == "production" ? "HOLI_CHAT_ORY_CLIENT_SECRET_PRODUCTION" : "HOLI_CHAT_ORY_CLIENT_SECRET_DEVELOPMENT"
             }
           }
         }
