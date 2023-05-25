@@ -16,7 +16,12 @@ To run Holi Chat Server locally, follow these steps:
 
 This will generate a default configuration file for your server.
 
-4. Add `local.chat.holi.social` to your `/etc/hosts`.
+4. Add `local.chat.holi.social` entry to your `/etc/hosts` file as follows:
+
+```
+127.0.0.1 local.chat.holi.social
+```
+
 5. Start the server by running the following command:
 
 ```
