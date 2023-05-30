@@ -16,7 +16,7 @@ database:
     password: ${HOLI_CHAT_DB_PASSWORD}
     database: ${HOLI_CHAT_DB_NAME}
     host: ${HOLI_CHAT_DB_HOST}
-    port: 5434
+    port: 5432
     cp_min: 5
     cp_max: 10
 oidc_providers:
