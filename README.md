@@ -39,3 +39,9 @@ docker-compose up -d
 ```
 
 This will start the server in the background and you can access the application by navigating to [https://local.chat.holi.social](https://local.chat.holi.social) in your web browser.
+
+You can run a local element web client like this: 
+```
+docker run -p 81:80 vectorim/element-web
+```
+Since the chat server does use a self signed SSL certificate, you first need to open localhost:8448 and trust the cert. You can then open localhost:81 in your browser and change the server you want to connect to to `local.chat.holi.social`.
