@@ -1,4 +1,4 @@
-## these dns changes are done in the infra shared project (https://gitlab.com/holisticfoundation/holi-infra)
+## these dns changes are done in the infra shared project (https://gitlab.holi.team/app/holi-infra)
 ## because the zone web.project-holi.org is managed in that project.
 
 resource "google_dns_record_set" "chat_host_domain_record_set" {

@@ -1,4 +1,4 @@
-## these dns changes are done in the infra shared project (https://gitlab.com/holisticfoundation/holi-infra)
+## these dns changes are done in the infra shared project (https://gitlab.holi.team/app/holi-infra)
 ## because the zone apis.project-holi.org is managed in that project.
 
 locals {
