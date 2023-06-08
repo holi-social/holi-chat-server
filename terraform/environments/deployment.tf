@@ -48,7 +48,7 @@ resource "google_cloud_run_service" "chat_server" {
         }
         env {
           name  = "HOLI_CHAT_SERVER_NAME"
-          value = local.environment_name == "production" ? "https://chat.holi.social" : "https://development.chat.holi.social"
+          value = local.environment_name == "production" ? "https://production.chat.holi.social" : "https://development.chat.holi.social"
         }
         env {
           name  = "ORY_BASE_URL"
