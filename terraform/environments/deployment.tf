@@ -38,7 +38,7 @@ resource "google_cloud_run_service" "chat_server" {
     spec {
       service_account_name = data.terraform_remote_state.holi_chat_server_common_state.outputs.cloud_run_service_account_email
       containers {
-        image = "${data.terraform_remote_state.holi_infra_state.outputs.gcr_location}/holi-chat-server:${var.image_tag}"
+        image = "${data.terraform_remote_state.holi_infra_state.outputs.gcr_location}/docker/holi-chat-server:${var.image_tag}"
         ports {
           container_port = 8008
         }
