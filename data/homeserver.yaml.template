@@ -11,6 +11,7 @@ listeners:
 database:
   name: psycopg2
   txn_limit: 10000
+  allow_unsafe_locale: true
   args:
     user: ${HOLI_CHAT_DB_USER}
     password: ${HOLI_CHAT_DB_PASSWORD}
