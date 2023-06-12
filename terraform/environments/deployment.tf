@@ -48,7 +48,7 @@ resource "google_cloud_run_service" "chat_server" {
         }
         env {
           name  = "HOLI_CHAT_SERVER_NAME"
-          value = local.environment_name == "production" ? "https://production.chat.holi.social" : "https://development.chat.holi.social"
+          value = "https://${local.environment_name}.chat.holi.social"
         }
         env {
           name  = "ORY_BASE_URL"
@@ -56,12 +56,7 @@ resource "google_cloud_run_service" "chat_server" {
         }
         env {
           name = "HOLI_CHAT_DB_HOST"
-          value_from {
-            secret_key_ref {
-              key  = "latest"
-              name = local.environment_name == "production" ? data.terraform_remote_state.holi_infra_state.outputs.database_name_production : data.terraform_remote_state.holi_infra_state.outputs.database_name_development
-            }
-          }
+          value = local.environment_name == "production" ? data.terraform_remote_state.holi_infra_state.outputs.database_ip_address_production : data.terraform_remote_state.holi_infra_state.outputs.database_ip_address_development
         }
         env {
           name = "HOLI_CHAT_DB_NAME"
