@@ -60,12 +60,7 @@ resource "google_cloud_run_service" "chat_server" {
         }
         env {
           name = "HOLI_CHAT_DB_NAME"
-          value_from {
-            secret_key_ref {
-              key  = "latest"
-              name = local.environment_name == "production" ? "HOLI_CHAT_DB_NAME_PRODUCTION" : "HOLI_CHAT_DB_NAME_DEVELOPMENT"
-            }
-          }
+          value = random_id.main.hex
         }
         env {
           name = "HOLI_CHAT_DB_USER"
