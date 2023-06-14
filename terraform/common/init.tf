@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "holi-shared-terraform-state"
-    prefix = "chat-host-common"
+    prefix = "chat-server-common"
   }
 }
 

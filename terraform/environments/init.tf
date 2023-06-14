@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "holi-shared-terraform-state"
-    prefix = "chat-host-environments"
+    prefix = "chat-server-environments"
   }
 }
 
@@ -13,11 +13,11 @@ data "terraform_remote_state" "holi_infra_state" {
   }
 }
 
-data "terraform_remote_state" "holi_chat_host_common_state" {
+data "terraform_remote_state" "holi_chat_server_common_state" {
   backend = "gcs"
   config = {
     bucket = "holi-shared-terraform-state"
-    prefix = "chat-host-common"
+    prefix = "chat-server-common"
   }
 }
 

@@ -4,5 +4,5 @@ locals {
   environment_name = trim(substr(local.environment, 0, 22), ".-") # limits the length of the name that it fits constraints google imposes for some resources, e.g. project ids
 
   # the dns name can be at most 64 chars in total
-  dns_name = "${trimsuffix(substr(local.environment, 0, 34), ".-")}.${data.terraform_remote_state.holi_chat_host_common_state.outputs.dns_chat_host_domain}"
+  dns_name = "${trimsuffix(substr(local.environment, 0, 34), ".-")}.${data.terraform_remote_state.holi_chat_server_common_state.outputs.dns_chat_server_domain}"
 }

@@ -27,7 +27,7 @@ variable "image_tag" {
   nullable = false
 }
 
-resource "google_cloud_run_service" "chat_host" {
+resource "google_cloud_run_service" "chat_server" {
   project  = data.terraform_remote_state.holi_infra_state.outputs.shared_project_id
   name     = random_id.main.hex
   location = "europe-north1" # finland, low CO2 emissions
@@ -36,9 +36,9 @@ resource "google_cloud_run_service" "chat_host" {
 
   template {
     spec {
-      service_account_name = data.terraform_remote_state.holi_chat_host_common_state.outputs.cloud_run_service_account_email
+      service_account_name = data.terraform_remote_state.holi_chat_server_common_state.outputs.cloud_run_service_account_email
       containers {
-        image = "${data.terraform_remote_state.holi_infra_state.outputs.gcr_location}/holi-chat-host:${var.image_tag}"
+        image = "${data.terraform_remote_state.holi_infra_state.outputs.gcr_location}/holi-chat-server:${var.image_tag}"
         ports {
           container_port = 8008
         }
@@ -48,7 +48,7 @@ resource "google_cloud_run_service" "chat_host" {
         }
         env {
           name  = "HOLI_CHAT_SERVER_NAME"
-          value = local.environment_name == "production" ? "https://chat.holi.social" : "https://development.chat.holi.social"
+          value = local.environment_name == "production" ? "https://production.chat.holi.social" : "https://development.chat.holi.social"
         }
         env {
           name  = "ORY_BASE_URL"
@@ -178,23 +178,23 @@ resource "google_cloud_run_service" "chat_host" {
   depends_on = [google_project_service.service]
 }
 
-resource "google_cloud_run_domain_mapping" "chat_host" {
-  project = google_cloud_run_service.chat_host.project
+resource "google_cloud_run_domain_mapping" "holi_social_chat_server" {
+  project = google_cloud_run_service.chat_server.project
   # location needs to be the same as the service's
-  location = google_cloud_run_service.chat_host.location
+  location = google_cloud_run_service.chat_server.location
   name     = local.dns_name
 
   metadata {
-    namespace = google_cloud_run_service.chat_host.project
+    namespace = google_cloud_run_service.chat_server.project
   }
 
   spec {
-    route_name = google_cloud_run_service.chat_host.name
+    route_name = google_cloud_run_service.chat_server.name
   }
 }
 
 # TODO security: Can we restrict this to a specific service account (of the API proxy) some day?
-data "google_iam_policy" "chat_host" {
+data "google_iam_policy" "chat_server" {
   binding {
     role = "roles/run.invoker"
     members = [
@@ -203,10 +203,10 @@ data "google_iam_policy" "chat_host" {
   }
 }
 
-resource "google_cloud_run_service_iam_policy" "chat_host" {
-  location = google_cloud_run_service.chat_host.location
-  project  = google_cloud_run_service.chat_host.project
-  service  = google_cloud_run_service.chat_host.name
+resource "google_cloud_run_service_iam_policy" "chat_server" {
+  location = google_cloud_run_service.chat_server.location
+  project  = google_cloud_run_service.chat_server.project
+  service  = google_cloud_run_service.chat_server.name
 
-  policy_data = data.google_iam_policy.chat_host.policy_data
+  policy_data = data.google_iam_policy.chat_server.policy_data
 }
