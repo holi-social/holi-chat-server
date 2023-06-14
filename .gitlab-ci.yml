@@ -1,0 +1,126 @@
+variables:
+  API_DOMAIN_PATH: "$CI_PROJECT_DIR/api_domain"
+
+stages:
+  - "build"
+  - "deploy"
+  - "destroy"
+
+default:
+  before_script:
+    - set -eux
+    - env
+  interruptible: true
+  tags:
+    - holi-small # build on smaller machine
+
+build_docker:
+  image: docker:20.10
+  stage: "build"
+  services:
+    - docker:20.10-dind
+  variables:
+    # this could be fetched via terraform output ("gcr_location" in infra project), but then we would need an extra job for terraform
+    ARTIFACT_IMAGE: europe-north1-docker.pkg.dev/holi-shared/docker/holi-chat-server
+  before_script:
+    - cat $GOOGLE_CLOUD_SERVICE_ACCOUNT | docker login -u _json_key --password-stdin https://europe-north1-docker.pkg.dev
+  script:
+    - docker pull $ARTIFACT_IMAGE || true # Allows us to use --cache-from, we need to tag with latest in the next command for this to work
+    - docker build --cache-from $ARTIFACT_IMAGE -t $ARTIFACT_IMAGE:latest -t $ARTIFACT_IMAGE:$CI_COMMIT_SHA -t $ARTIFACT_IMAGE:$CI_COMMIT_REF_SLUG .
+    - docker push $ARTIFACT_IMAGE:$CI_COMMIT_SHA # this is the tag that is used for deployment
+    - docker push $ARTIFACT_IMAGE:$CI_COMMIT_REF_SLUG # just for easily knowing which is the last image for a branch
+
+.deploy:
+  stage: "deploy"
+  image:
+    name: "hashicorp/terraform:1.1.9"
+    # default entrypoint is terraform command, but we want to run shell scripts
+    entrypoint: ["/bin/sh", "-c"]
+  variables:
+    ENVIRONMENT_ID: $CI_ENVIRONMENT_SLUG
+  artifacts:
+    paths:
+      - "terraform/scripts/crash.log" # optional, only available in case of a crash/panic
+      - "terraform/scripts/terraform-*.log" # separate log for every step/command
+      - $API_DOMAIN_PATH
+    name: "${CI_JOB_NAME}_${CI_JOB_ID}"
+    #when: on_failure # can't do that for api base url, but can't define multiple artifacts
+    expire_in: 1 month
+  script:
+    - export GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_CLOUD_SERVICE_ACCOUNT}
+    - terraform/environments/scripts/create-or-update-env.sh $ENVIRONMENT_ID $CI_COMMIT_SHA
+    - echo "$(terraform/scripts/get-api-domain.sh)" > $API_DOMAIN_PATH
+  resource_group: $ENVIRONMENT_ID # never execute terraform in parallel on the same environment
+  interruptible: false
+
+.e2e:
+  stage: "deploy"
+  image: "archlinux:base"
+  script:
+    - API_BASE_URL=`cat $API_DOMAIN_PATH`
+    - echo "e2e tests against $CI_ENVIRONMENT_SLUG environment go here and against $API_BASE_URL"
+    - terraform/scripts/wait-for-ssl.sh "https://${API_BASE_URL}"
+
+review_deploy:
+  extends: .deploy
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    url: https://$CI_ENVIRONMENT_SLUG.chat.holi.social
+    on_stop: review_destroy
+    auto_stop_in: 1 week
+  except:
+    - main
+    - production
+    - /^noenv\/.*/
+
+review_destroy:
+  stage: destroy
+  image:
+    name: "hashicorp/terraform:1.1.9"
+    # default entrypoint is terraform command, but we want to run shell scripts
+    entrypoint: ["/bin/sh", "-c"]
+  variables:
+    # has to be set to none for auto stop
+    GIT_STRATEGY: none
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    action: stop
+  dependencies: [] # explicitly disable artifact usage
+  script:
+    - export GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_CLOUD_SERVICE_ACCOUNT}
+    # branch may have been deleted, so we clone and checkout main
+    - git clone $CI_REPOSITORY_URL main-clone
+    - cd main-clone
+    - terraform/environments/scripts/destroy-env.sh $CI_ENVIRONMENT_SLUG
+  # can't use rules here: https://gitlab.com/gitlab-org/gitlab/-/issues/34077
+  when: manual
+  allow_failure: false
+  except:
+    - main
+    - production
+    - /^noenv\/.*/
+  resource_group: $CI_ENVIRONMENT_SLUG # never execute terraform in parallel on the same environment
+  interruptible: false
+
+staging_deploy:
+  extends: .deploy
+  environment:
+    name: staging
+    deployment_tier: staging
+    url: https://staging.chat.holi.social
+  variables:
+    ENVIRONMENT_ID: staging
+  only:
+    - main
+
+production_deploy:
+  extends: .deploy
+  allow_failure: false
+  environment:
+    name: production
+    deployment_tier: production
+    url: https://production.chat.holi.social
+  variables:
+    ENVIRONMENT_ID: production
+  only:
+    - production

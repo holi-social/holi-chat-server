@@ -38,7 +38,7 @@ resource "google_cloud_run_service" "chat_server" {
     spec {
       service_account_name = data.terraform_remote_state.holi_chat_server_common_state.outputs.cloud_run_service_account_email
       containers {
-        image = "${data.terraform_remote_state.holi_infra_state.outputs.gcr_location}/holi-chat-server:${var.image_tag}"
+        image = "${data.terraform_remote_state.holi_infra_state.outputs.artifact_registry_location}/holi-chat-server:${var.image_tag}"
         ports {
           container_port = 8008
         }
@@ -48,7 +48,7 @@ resource "google_cloud_run_service" "chat_server" {
         }
         env {
           name  = "HOLI_CHAT_SERVER_NAME"
-          value = local.environment_name == "production" ? "https://production.chat.holi.social" : "https://development.chat.holi.social"
+          value = "${local.environment_name}.chat.holi.social"
         }
         env {
           name  = "ORY_BASE_URL"
@@ -56,21 +56,11 @@ resource "google_cloud_run_service" "chat_server" {
         }
         env {
           name = "HOLI_CHAT_DB_HOST"
-          value_from {
-            secret_key_ref {
-              key  = "latest"
-              name = local.environment_name == "production" ? data.terraform_remote_state.holi_infra_state.outputs.database_name_production : data.terraform_remote_state.holi_infra_state.outputs.database_name_development
-            }
-          }
+          value = local.environment_name == "production" ? data.terraform_remote_state.holi_infra_state.outputs.database_ip_address_production : data.terraform_remote_state.holi_infra_state.outputs.database_ip_address_development
         }
         env {
           name = "HOLI_CHAT_DB_NAME"
-          value_from {
-            secret_key_ref {
-              key  = "latest"
-              name = local.environment_name == "production" ? "HOLI_CHAT_DB_NAME_PRODUCTION" : "HOLI_CHAT_DB_NAME_DEVELOPMENT"
-            }
-          }
+          value = local.environment_name == "production" ? "holi-chat-production" : "holi-chat-development"
         }
         env {
           name = "HOLI_CHAT_DB_USER"
