@@ -25,11 +25,19 @@ services:
       - "traefik.http.routers.traefik.middlewares=traefik-auth"
       - "traefik.http.routers.traefik.tls.certresolver=http"
       - "traefik.http.routers.traefik.service=api@internal"
+    logging:
+      driver: "local"
+    restart: always
+
   synapse:
-    image: matrixdotorg/synapse
+    image: matrixdotorg/synapse:latest
+    container_name: synapse-chat
+    entrypoint: ./start.sh
+    env_file:
+      - ./.envrc.local
     restart: always
     volumes:
-      - ./data:/data
+      - chat-data:/data
     ports:
       - 8008:8008
       - 8009:8009
@@ -43,6 +51,10 @@ services:
       - "traefik.http.routers.synapse.tls.certresolver=http"
       - "traefik.http.routers.synapse.service=synapse"
       - "traefik.http.services.synapse.loadbalancer.server.port=8008"
+    logging:
+      driver: "local"
+    depends_on:
+      - db
   db:
     image: postgres
     restart: always
@@ -59,6 +71,7 @@ services:
       - chat-net
 
 volumes:
+  chat-data:
   chat-db:
 
 networks:
