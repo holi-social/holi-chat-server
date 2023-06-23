@@ -4,7 +4,7 @@ listeners:
   - port: 8008
     tls: false
     type: http
-    x_forwarded: true
+    x_forwarded: false
     bind_addresses: ['::']
     resources:
       - names: [client, federation]
