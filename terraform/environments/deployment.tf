@@ -156,7 +156,7 @@ resource "google_cloud_run_service" "chat_server" {
   metadata {
     annotations = {
       # possible values: all/internal/internal-and-cloud-load-balancing https://cloud.google.com/sdk/gcloud/reference/run/services/update#--ingress
-      "run.googleapis.com/ingress" = "internal"
+      "run.googleapis.com/ingress" = "all"
     }
   }
 
