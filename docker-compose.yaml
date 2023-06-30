@@ -32,12 +32,11 @@ services:
   synapse:
     image: matrixdotorg/synapse:latest
     container_name: synapse-chat
-    entrypoint: ./start.sh
     env_file:
       - ./.envrc.local
     restart: always
     volumes:
-      - chat-data:/data
+      - ./data:/data
     ports:
       - 8008:8008
       - 8009:8009
@@ -71,7 +70,6 @@ services:
       - chat-net
 
 volumes:
-  chat-data:
   chat-db:
 
 networks:
