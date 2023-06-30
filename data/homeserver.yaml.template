@@ -29,7 +29,7 @@ oidc_providers:
     scopes: ["openid", "profile"]
     user_mapping_provider:
       config:
-        localpart_template: "{{ user.name }}"
+        localpart_template: '{{ user.name|lower|replace(" ", "_") }}'
         display_name_template: "{{ user.name }}"
     backchannel_logout_enabled: true # Optional
 
@@ -45,3 +45,16 @@ sso:
   client_whitelist:
     - http://localhost
   update_profile_information: true
+
+jwt_config:
+    enabled: true
+    secret: {"keys": [{
+            "use": "sig",
+            "kty": "RSA",
+            "kid": "aca184df-0f28-4e16-85d6-aee2da00bc31",
+            "alg": "RS256",
+            "n": "o6WHKbSNN9k2u34BFyDR85EnP7YHS_gmCkYZpMs_jKMmlcsE2Mf9hlrQuTqmnTU7a5wq-vEQe00fUtj42HXXuGTpPSdY5Ea7si8xWbVtU7aADm-89R0qssapT2NroKnGKRVjEQs-rN_aSwzgU8M_Qog7vktS1apvm2X-Ny882V075lN03mlfiXJVccdWg8Gx-e3v7S6Na66TuY-THybh4m-heYfiXTUd4F61-XZde28nNNzO4pM_IL_H2jQ7_pEgh_zY2KidhIeLuPBPdv9KrsftTuh2f1Prt-HxDsfPeUYVy2M7hnDE2g7Y6ic_MyPP0n0zFNlAxSZTv-UXLEVgpkbFtOTmyBcgT1j6C6sEYDXMANGzJ0ng647rvz0Qx3bbf-SHfIgvqk-zWVCnDcIHrI4x5xZ4K6NZ4Rid9VDcA3ZXTY51A95wmNZxyjCPEWFbL4Vih9fLpHwWY9UNdMtjjyHiLmQFdaCucRHSrJCLzVx_bR7XASGXEeXODos-5-Nhw0TS_AzY7UJ4crmzMJm2MI9zRioy9hm0YnlLsQW4QjtERb1gDVDlRYGYxig5Y24SqRpdAJQYFAbym8Fw3_vgGIn2vaBReqAH_bL0z4c5mnBKW-PJx1ioWvSDJMVpp7aDATzIQnwwteuF-YlAlQKo-nYUJWuCGlFEz6gGkUCz0WU",
+            "e": "AQAB"
+          }]}
+    algorithm: "RS256"
+    subject_claim: "ident"
