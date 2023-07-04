@@ -5,7 +5,7 @@ listeners:
     tls: false
     type: http
     x_forwarded: false
-    bind_addresses: ['::']
+    bind_addresses: ["::"]
     resources:
       - names: [client, federation]
         compress: false
@@ -47,14 +47,20 @@ sso:
   update_profile_information: true
 
 jwt_config:
-    enabled: true
-    secret: {"keys": [{
+  enabled: true
+  secret:
+    {
+      "keys":
+        [
+          {
             "use": "sig",
             "kty": "RSA",
-            "kid": "aca184df-0f28-4e16-85d6-aee2da00bc31",
+            "kid": "147ad542-5980-4a1a-bb23-b163b731a3cc",
             "alg": "RS256",
-            "n": "o6WHKbSNN9k2u34BFyDR85EnP7YHS_gmCkYZpMs_jKMmlcsE2Mf9hlrQuTqmnTU7a5wq-vEQe00fUtj42HXXuGTpPSdY5Ea7si8xWbVtU7aADm-89R0qssapT2NroKnGKRVjEQs-rN_aSwzgU8M_Qog7vktS1apvm2X-Ny882V075lN03mlfiXJVccdWg8Gx-e3v7S6Na66TuY-THybh4m-heYfiXTUd4F61-XZde28nNNzO4pM_IL_H2jQ7_pEgh_zY2KidhIeLuPBPdv9KrsftTuh2f1Prt-HxDsfPeUYVy2M7hnDE2g7Y6ic_MyPP0n0zFNlAxSZTv-UXLEVgpkbFtOTmyBcgT1j6C6sEYDXMANGzJ0ng647rvz0Qx3bbf-SHfIgvqk-zWVCnDcIHrI4x5xZ4K6NZ4Rid9VDcA3ZXTY51A95wmNZxyjCPEWFbL4Vih9fLpHwWY9UNdMtjjyHiLmQFdaCucRHSrJCLzVx_bR7XASGXEeXODos-5-Nhw0TS_AzY7UJ4crmzMJm2MI9zRioy9hm0YnlLsQW4QjtERb1gDVDlRYGYxig5Y24SqRpdAJQYFAbym8Fw3_vgGIn2vaBReqAH_bL0z4c5mnBKW-PJx1ioWvSDJMVpp7aDATzIQnwwteuF-YlAlQKo-nYUJWuCGlFEz6gGkUCz0WU",
-            "e": "AQAB"
-          }]}
-    algorithm: "RS256"
-    subject_claim: "ident"
+            "n": "xOYw-BTlL7EVScqYqxwUubSWY_6FEMcO88wXIxvnLTN7ldgvxocCfgWoM15oq5nwdCe3v3z_hoBY9nPeqYEYyN2Axz1OhKzvzPSy5_lAJfYMpIiaYpYFYvrR5L7QnOwdUi6QNzXnZS6-gGqQz6mTNpFpEcoo313eznhkMq9w72bDYHobjdsuSUGd_qF3QnWC9pn9f4xprwErJIdPU-jSjKwA7T1NWuB2z0SbAI2ScX2MXBNi3aZUJpYivWHWi90l76_XbgNszAveY2vj05QV7E2nivLsmBdW8Y3OtLTtjnRT8kNOkCPYoSsH8Pv1kGvEjvlJNmvK8AJufjVgiChUQm5xwce77Jp3Zzwb47vUt4Y4ZLY8kBOmLsF7nESZuUz3fA8C3-dTdj1RKrzdzcho8puUGZHEPgYSXc2PVeA6mdayn3gc6dlo_sKy8ysDAQwBI68YZJUNxYBPnpXc0ODU0K972TB-Bg6hbLMc6l24anLLza81wMm_H5h7DAgbRTGdFAGE3Wy75Jv0-ngso5I5aTG5DAkSHxNCbBwtIV-eh0aH_E2KS9xHAYnd1gfoiqB83JxgGLjeJDOA8turZnJkRuFh7tMq2MBFShzwr9EBsIKVfYi57K22U19GXVenvOxdQMxNofxhihM-yqawppZAecarLahHP570RpbBQsTcCWk",
+            "e": "AQAB",
+          },
+        ],
+    }
+  algorithm: "RS256"
+  subject_claim: "ident"
