@@ -8,15 +8,15 @@ services:
         aliases:
           - ${HOLI_CHAT_SERVER_NAME}
     command:
-      - "--entryPoints.http.address=:80"
+      - "--entryPoints.http.address=:8010"
       - "--entryPoints.http.http.redirections.entryPoint.to=https"
       - "--entryPoints.http.http.redirections.entryPoint.scheme=https"
-      - "--entryPoints.https.address=:443"
+      - "--entryPoints.https.address=:8011"
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
       - "--providers.docker.exposedByDefault=false"
     ports:
-      - "80:80"
-      - "443:443"
+      - "8010:80"
+      - "8011:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     labels:
