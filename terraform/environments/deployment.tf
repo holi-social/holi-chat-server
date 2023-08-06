@@ -184,17 +184,7 @@ resource "google_cloud_run_service" "chat_push_gateway" {
         ports {
           container_port = 5000
         }
-        resources {
-          limits = {
-            # cpu can only be scaled down to 1000m as long as container_concurrency is set to != 1
-            cpu    = local.environment == "production" ? "512m" : "256m"   # TODO double check values
-            memory = local.environment == "production" ? "256Mi" : "128Mi" # TODO double check values
-          }
-          requests = {
-            cpu    = local.environment == "production" ? "1000m" : "10m"
-            memory = local.environment == "production" ? "512Mi" : "256Mi"
-          }
-        }
+        # TODO consider adding resource limits
       }
       container_concurrency = 0 # 0 means thread safe, no restriction on max concurrency
     }
