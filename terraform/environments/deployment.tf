@@ -3,9 +3,14 @@
  * (after destroying the ones created before maybe failed, e.g. on environment cleanup, reopening a branch), we ensure uniqueness
  * by appending some random data to resource ids in order to avoid collisions.
  */
-resource "random_id" "main" {
+resource "random_id" "chat-server" {
   byte_length = 2
   prefix      = "chat-host-${local.environment_name}-"
+}
+
+resource "random_id" "chat-push-gateway" {
+  byte_length = 2
+  prefix      = "chat-push-gateway-${local.environment_name}-"
 }
 
 resource "google_project_service" "service" {
@@ -29,7 +34,7 @@ variable "image_tag" {
 
 resource "google_cloud_run_service" "chat_server" {
   project  = data.terraform_remote_state.holi_infra_state.outputs.shared_project_id
-  name     = random_id.main.hex
+  name     = random_id.chat-server.hex
   location = "europe-north1" # finland, low CO2 emissions
   # https://github.com/hashicorp/terraform-provider-google/issues/5898
   autogenerate_revision_name = true
@@ -171,7 +176,7 @@ resource "google_cloud_run_service" "chat_server" {
 
 resource "google_cloud_run_service" "chat_push_gateway" {
   project  = data.terraform_remote_state.holi_infra_state.outputs.shared_project_id
-  name     = random_id.main.hex
+  name     = random_id.chat-push-gateway.hex
   location = "europe-north1" # finland, low CO2 emissions
   # https://github.com/hashicorp/terraform-provider-google/issues/5898
   autogenerate_revision_name = true
@@ -198,7 +203,7 @@ resource "google_cloud_run_service" "chat_push_gateway" {
   }
 }
 
-resource "google_cloud_run_domain_mapping" "holi_social_chat_server" {
+resource "google_cloud_run_dochat-server_mapping" "holi_social_chat_server" {
   project = google_cloud_run_service.chat_server.project
   # location needs to be the same as the service's
   location = google_cloud_run_service.chat_server.location
@@ -214,7 +219,7 @@ resource "google_cloud_run_domain_mapping" "holi_social_chat_server" {
 }
 
 
-resource "google_cloud_run_domain_mapping" "holi_social_chat_push_gateway" {
+resource "google_cloud_run_dochat-server_mapping" "holi_social_chat_push_gateway" {
   project = google_cloud_run_service.chat_server.project
   # location needs to be the same as the service's
   location = google_cloud_run_service.chat_push_gateway.location
