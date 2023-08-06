@@ -190,6 +190,15 @@ resource "google_cloud_run_service" "chat_push_gateway" {
           container_port = 5000
         }
         # TODO consider adding resource limits
+        env {
+          name = "HOLI_CHAT_PUSH_GATEWAY_FCM_API_KEY"
+          value_from {
+            secret_key_ref {
+              key  = "latest"
+              name = local.environment_name == "production" ? "HOLI_CHAT_PUSH_GATEWAY_FCM_API_KEY_PRODUCTION" : "HOLI_CHAT_PUSH_GATEWAY_FCM_API_KEY_STAGING"
+            }
+          }
+        }
       }
       container_concurrency = 0 # 0 means thread safe, no restriction on max concurrency
     }
