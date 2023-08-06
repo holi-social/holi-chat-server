@@ -22,13 +22,20 @@ build_docker:
   variables:
     # this could be fetched via terraform output ("gcr_location" in infra project), but then we would need an extra job for terraform
     ARTIFACT_IMAGE: europe-north1-docker.pkg.dev/holi-shared/docker/holi-chat-server
+    PUSH_GATEWAY_ARTIFACT_IMAGE: europe-north1-docker.pkg.dev/holi-shared/docker/holi-chat-push-gateway
   before_script:
     - cat $GOOGLE_CLOUD_SERVICE_ACCOUNT | docker login -u _json_key --password-stdin https://europe-north1-docker.pkg.dev
   script:
+    - echo '===> building chat server image'
     - docker pull $ARTIFACT_IMAGE || true # Allows us to use --cache-from, we need to tag with latest in the next command for this to work
     - docker build --cache-from $ARTIFACT_IMAGE -t $ARTIFACT_IMAGE:latest -t $ARTIFACT_IMAGE:$CI_COMMIT_SHA -t $ARTIFACT_IMAGE:$CI_COMMIT_REF_SLUG .
     - docker push $ARTIFACT_IMAGE:$CI_COMMIT_SHA # this is the tag that is used for deployment
     - docker push $ARTIFACT_IMAGE:$CI_COMMIT_REF_SLUG # just for easily knowing which is the last image for a branch
+    - echo '===> building push gateway image'
+    - docker pull $PUSH_GATEWAY_ARTIFACT_IMAGE || true # Allows us to use --cache-from, we need to tag with latest in the next command for this to work
+    - docker build --cache-from $PUSH_GATEWAY_ARTIFACT_IMAGE -t $PUSH_GATEWAY_ARTIFACT_IMAGE:latest -t $PUSH_GATEWAY_ARTIFACT_IMAGE:$CI_COMMIT_SHA -t $PUSH_GATEWAY_ARTIFACT_IMAGE:$CI_COMMIT_REF_SLUG .
+    - docker push $PUSH_GATEWAY_ARTIFACT_IMAGE:$CI_COMMIT_SHA # this is the tag that is used for deployment
+    - docker push $PUSH_GATEWAY_ARTIFACT_IMAGE:$CI_COMMIT_REF_SLUG # just for easily knowing which is the last image for a branch
 
 .deploy:
   stage: "deploy"
