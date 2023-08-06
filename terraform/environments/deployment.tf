@@ -180,7 +180,7 @@ resource "google_cloud_run_service" "chat_push_gateway" {
     spec {
       service_account_name = data.terraform_remote_state.holi_chat_server_common_state.outputs.cloud_run_service_account_email
       containers {
-        image = image = "${data.terraform_remote_state.holi_infra_state.outputs.artifact_registry_location}/holi-chat-push-gateway:${var.image_tag}"
+        image = "${data.terraform_remote_state.holi_infra_state.outputs.artifact_registry_location}/holi-chat-push-gateway:${var.image_tag}"
         ports {
           container_port = 5000
         }
