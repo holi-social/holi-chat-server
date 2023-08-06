@@ -168,6 +168,36 @@ resource "google_cloud_run_service" "chat_server" {
   depends_on = [google_project_service.service]
 }
 
+
+resource "google_cloud_run_service" "chat_push_gateway" {
+  project  = data.terraform_remote_state.holi_infra_state.outputs.shared_project_id
+  name     = random_id.main.hex
+  location = "europe-north1" # finland, low CO2 emissions
+  # https://github.com/hashicorp/terraform-provider-google/issues/5898
+  autogenerate_revision_name = true
+
+  template {
+    spec {
+      service_account_name = data.terraform_remote_state.holi_chat_server_common_state.outputs.cloud_run_service_account_email
+      containers {
+        image = "${data.terraform_remote_state.holi_infra_state.outputs.artifact_registry_location}/holi-chat-push-gateway:${var.image_tag}"
+        ports {
+          container_port = 5000
+        }
+        # TODO consider adding resource limits
+      }
+      container_concurrency = 0 # 0 means thread safe, no restriction on max concurrency
+    }
+    # template annotations: https://cloud.google.com/run/docs/reference/rpc/google.cloud.run.v1#revisiontemplate
+    metadata {
+      annotations = {
+        "autoscaling.knative.dev/minScale" = local.environment == "production" ? "1" : "0"
+        "autoscaling.knative.dev/maxScale" = local.environment == "production" ? "1" : "1"
+      }
+    }
+  }
+}
+
 resource "google_cloud_run_domain_mapping" "holi_social_chat_server" {
   project = google_cloud_run_service.chat_server.project
   # location needs to be the same as the service's
@@ -180,6 +210,22 @@ resource "google_cloud_run_domain_mapping" "holi_social_chat_server" {
 
   spec {
     route_name = google_cloud_run_service.chat_server.name
+  }
+}
+
+
+resource "google_cloud_run_domain_mapping" "holi_social_chat_push_gateway" {
+  project = google_cloud_run_service.chat_server.project
+  # location needs to be the same as the service's
+  location = google_cloud_run_service.chat_push_gateway.location
+  name     = local.chat_push_gateway_dns_name
+
+  metadata {
+    namespace = google_cloud_run_service.chat_push_gateway.project
+  }
+
+  spec {
+    route_name = google_cloud_run_service.chat_push_gateway.name
   }
 }
 

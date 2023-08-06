@@ -1,37 +1,10 @@
 version: "3"
 
 services:
-  traefik:
-    image: traefik:v2.9.1
-    networks:
-      chat-net:
-        aliases:
-          - ${HOLI_CHAT_SERVER_NAME}
-    command:
-      - "--entryPoints.http.address=:8010"
-      - "--entryPoints.http.http.redirections.entryPoint.to=https"
-      - "--entryPoints.http.http.redirections.entryPoint.scheme=https"
-      - "--entryPoints.https.address=:8011"
-      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
-      - "--providers.docker.exposedByDefault=false"
-    ports:
-      - "8010:80"
-      - "8011:443"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    labels:
-      - "traefik.http.routers.traefik.entrypoints=https"
-      - "traefik.http.routers.traefik.rule=Host(`local.traefik.chat.holi.social`)"
-      - "traefik.http.routers.traefik.middlewares=traefik-auth"
-      - "traefik.http.routers.traefik.tls.certresolver=http"
-      - "traefik.http.routers.traefik.service=api@internal"
-    logging:
-      driver: "local"
-    restart: always
 
-  synapse:
+  chat-server:
     image: matrixdotorg/synapse:latest
-    container_name: synapse-chat
+    container_name: chat-server
     env_file:
       - ./.envrc.local
     restart: always
@@ -39,23 +12,31 @@ services:
       - ./data:/data
     ports:
       - 8008:8008
-      - 8009:8009
       - 8448:8448
     networks:
       - chat-net
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.synapse.entrypoints=https"
-      - "traefik.http.routers.synapse.rule=Host(`${HOLI_CHAT_SERVER_NAME}`)"
-      - "traefik.http.routers.synapse.tls.certresolver=http"
-      - "traefik.http.routers.synapse.service=synapse"
-      - "traefik.http.services.synapse.loadbalancer.server.port=8008"
     logging:
       driver: "local"
     depends_on:
-      - db
-  db:
+      - chat-db
+      - chat-push-gateway
+
+  chat-push-gateway:
+    image: matrixdotorg/sygnal
+    container_name: chat-push-gateway
+    restart: always
+    volumes:
+      - ./sygnal.yaml:/sygnal.yaml
+    ports:
+      - 8050:5000
+    networks:
+      - chat-net
+    logging:
+      driver: "local"
+
+  chat-db:
     image: postgres
+    container_name: chat-db
     restart: always
     volumes:
       - chat-db:/var/lib/postgresql/data
@@ -74,3 +55,4 @@ volumes:
 
 networks:
   chat-net:
+    driver: bridge

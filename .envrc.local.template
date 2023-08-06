@@ -1,11 +1,31 @@
+# ========= SYNAPSE CHAT SERVER CONFIGURATION =========
+# defaults set to values used in local development, will be overridden in deployment
+
 export HOLI_CHAT_SERVER_NAME="local.chat.holi.social"
-export HOLI_CHAT_DB_HOST="db"
+
+export HOLI_CHAT_DB_HOST="chat-db"
+
 export HOLI_CHAT_DB_NAME="chat-db"
+
 export HOLI_CHAT_DB_USER="postgres"
+
 export HOLI_CHAT_DB_PASSWORD="password"
+
 export ORY_BASE_URL="https://dev-auth.holi.social"
+
 export HOLI_CHAT_ORY_CLIENT_ID=
+
 export HOLI_CHAT_ORY_CLIENT_SECRET=
+
 export HOLI_CHAT_REGISTRATION_SHARED_SECRET=
-export HOLI_CHAT_MACAROON_SECRET_KEY=
+
 export HOLI_CHAT_FORM_SECRET=
+
+# shared secret used to generate access tokens within Synapse to be used for subsequent client requests
+export HOLI_CHAT_MACAROON_SECRET_KEY= 
+
+
+# ========= SYGNAL PUSH GATEWAY CONFIGURATION =========
+
+# API key for Firebase Cloud Messaging
+export HOLI_CHAT_PUSH_GATEWAY_FCM_API_KEY=
