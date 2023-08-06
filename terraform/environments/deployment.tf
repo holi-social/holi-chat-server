@@ -203,7 +203,7 @@ resource "google_cloud_run_service" "chat_push_gateway" {
   }
 }
 
-resource "google_cloud_run_dochat-server_mapping" "holi_social_chat_server" {
+resource "google_cloud_run_domain_mapping" "holi_social_chat_server" {
   project = google_cloud_run_service.chat_server.project
   # location needs to be the same as the service's
   location = google_cloud_run_service.chat_server.location
@@ -219,7 +219,7 @@ resource "google_cloud_run_dochat-server_mapping" "holi_social_chat_server" {
 }
 
 
-resource "google_cloud_run_dochat-server_mapping" "holi_social_chat_push_gateway" {
+resource "google_cloud_run_domain_mapping" "holi_social_chat_push_gateway" {
   project = google_cloud_run_service.chat_server.project
   # location needs to be the same as the service's
   location = google_cloud_run_service.chat_push_gateway.location
