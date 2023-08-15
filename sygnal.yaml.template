@@ -200,7 +200,7 @@ apps:
 
   # This is an example GCM/FCM push configuration.
   #
-  social.holi:
+  social.holi.ios:
     type: gcm
     api_key: ${HOLI_CHAT_PUSH_GATEWAY_FCM_API_KEY}
   #
