@@ -185,15 +185,23 @@ resource "google_cloud_run_service" "chat_push_gateway" {
     spec {
       service_account_name = data.terraform_remote_state.holi_chat_server_common_state.outputs.cloud_run_service_account_email
       volumes {
-        name = "/data/apns-keyfile.p8"
+        name = "apns_keyfile"
         secret {
           secret_name = local.environment_name == "production" ? "APNS_KEYFILE_PRODUCTION" : "APNS_KEYFILE_PRODUCTION"
+          items {
+            key  = "latest"
+            path = "apns-keyfile.p8" # relative to mount_path in volume_mounts
+          }
         }
       }
       containers {
         image = "${data.terraform_remote_state.holi_infra_state.outputs.artifact_registry_location}/holi-chat-push-gateway:${var.image_tag}"
         ports {
           container_port = 5000
+        }
+        volume_mounts {
+          mount_path = "/apns"
+          name       = "apns_keyfile"
         }
         # TODO consider adding resource limits
         env {
@@ -207,7 +215,7 @@ resource "google_cloud_run_service" "chat_push_gateway" {
         }
         env {
           name = "APNS_KEYFILE"
-          value = "/data/apns-keyfile.p8" # must be identical to the file name in the volume
+          value = "/apns/apns-keyfile.p8" # see volume_mounts and volumes
         }
         env {
           name = "APNS_KEY_ID"
