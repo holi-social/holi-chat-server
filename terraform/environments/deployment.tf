@@ -184,6 +184,12 @@ resource "google_cloud_run_service" "chat_push_gateway" {
   template {
     spec {
       service_account_name = data.terraform_remote_state.holi_chat_server_common_state.outputs.cloud_run_service_account_email
+      volumes {
+        name = "/data/apns-keyfile.p8"
+        secret {
+          secret_name = local.environment_name == "production" ? "APNS_KEYFILE_PRODUCTION" : "APNS_KEYFILE_PRODUCTION"
+        }
+      }
       containers {
         image = "${data.terraform_remote_state.holi_infra_state.outputs.artifact_registry_location}/holi-chat-push-gateway:${var.image_tag}"
         ports {
@@ -197,12 +203,6 @@ resource "google_cloud_run_service" "chat_push_gateway" {
               key  = "latest"
               name = local.environment_name == "production" ? "HOLI_CHAT_PUSH_GATEWAY_FCM_API_KEY_PRODUCTION" : "HOLI_CHAT_PUSH_GATEWAY_FCM_API_KEY_STAGING"
             }
-          }
-        }
-        volumes {
-          name = "/data/apns-keyfile.p8"
-          secret {
-            secret_name = local.environment_name == "production" ? "APNS_KEYFILE_PRODUCTION" : "APNS_KEYFILE_PRODUCTION"
           }
         }
         env {
