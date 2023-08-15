@@ -163,7 +163,7 @@ metrics:
 apps:
   # This is an example APNs push configuration
   #
-  social.holi:
+  social.holi.ios:
     type: apns
   #
   #  # Authentication
@@ -200,7 +200,7 @@ apps:
 
   # This is an example GCM/FCM push configuration.
   #
-  social.holi.ios:
+  social.holi:
     type: gcm
     api_key: ${HOLI_CHAT_PUSH_GATEWAY_FCM_API_KEY}
   #
