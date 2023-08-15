@@ -196,7 +196,7 @@ apps:
   #  #   * sandbox
   #  #
   #  # The default is 'production'. Uncomment to use the sandbox instance.
-  #  #platform: sandbox
+    platform: production
 
   # This is an example GCM/FCM push configuration.
   #
