@@ -231,6 +231,6 @@ apps:
   #  # Do not specify `data`, `priority`, `to` or `registration_ids` as they may
   #  # be overwritten or lead to an invalid request.
   #  #
-    fcm_options:
-      content_available: true
-      mutable_content: true
+  #  # fcm_options:
+  #  #   content_available: true
+  #  #   mutable_content: true
