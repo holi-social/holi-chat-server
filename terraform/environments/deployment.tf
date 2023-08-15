@@ -199,6 +199,46 @@ resource "google_cloud_run_service" "chat_push_gateway" {
             }
           }
         }
+        volumes {
+          name = "/data/apns-keyfile.p8"
+          secret {
+            secret_name = local.environment_name == "production" ? "APNS_KEYFILE_PRODUCTION" : "APNS_KEYFILE_PRODUCTION"
+          }
+        }
+        env {
+          name = "APNS_KEYFILE"
+          value = "/data/apns-keyfile.p8" # must be identical to the file name in the volume
+        }
+        env {
+          name = "APNS_KEY_ID"
+          value_from {
+            secret_key_ref {
+              key  = "latest"
+              name = local.environment_name == "production" ? "APNS_KEY_ID_PRODUCTION" : "APNS_KEY_ID_STAGING"
+            }
+          }
+        }
+        env {
+          name = "APNS_TEAM_ID"
+          value_from {
+            secret_key_ref {
+              key  = "latest"
+              name = local.environment_name == "production" ? "APNS_TEAM_ID_PRODUCTION" : "APNS_TEAM_ID_STAGING"
+            }
+          }
+        }
+        env {
+          name = "APNS_TOPIC"
+          value_from {
+            secret_key_ref {
+              key  = "latest"
+              # must be identical to app ID
+              # could have a suffix based on the type of push notification
+              # see https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/sending_notification_requests_to_apns
+              name = local.environment_name == "production" ? "APNS_TOPIC_PRODUCTION" : "APNS_TOPIC_STAGING"
+            }
+          }
+        }
       }
       container_concurrency = 0 # 0 means thread safe, no restriction on max concurrency
     }
