@@ -29,7 +29,7 @@ oidc_providers:
     scopes: ["openid", "profile"]
     user_mapping_provider:
       config:
-        localpart_template: '{{ user.name|lower|replace(" ", "_") }}'
+        localpart_template: '{{ user.identity }}'
         display_name_template: "{{ user.name }}"
     backchannel_logout_enabled: true # Optional
 
