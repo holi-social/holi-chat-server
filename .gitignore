@@ -1,7 +1,9 @@
 .envrc.local
+.envrc-push-gateway.local
 sygnal.yaml
 homeserver.yaml
 media_store
 *.key
-apns-test/apns_keyfile_staging.p8
 apns-test/node_modules/
+data-push-gateway/apns_keyfile_staging.p8
+apns-test/apns_keyfile_staging.p8
