@@ -23,3 +23,6 @@ export HOLI_CHAT_FORM_SECRET=
 
 # shared secret used to generate access tokens within Synapse to be used for subsequent client requests
 export HOLI_CHAT_MACAROON_SECRET_KEY= 
+
+# ip range used within the docker-compose container, needs to be unblocked in order for Synapse to be able to resolve Sygnal
+export HOLI_CHAT_IP_RANGE_WHITELIST=172.16.0.0/12
