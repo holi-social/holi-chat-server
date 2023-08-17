@@ -2,7 +2,7 @@ FROM matrixdotorg/sygnal
 
 RUN apt-get update && apt-get install -y gettext-base
 
-COPY sygnal.yaml.template /sygnal.yaml.template
+COPY data-push-gateway/sygnal.yaml.template /data/sygnal.yaml.template
 COPY generate-push-gateway-config.sh /generate-push-gateway-config.sh
 RUN chmod +x /generate-push-gateway-config.sh
 
