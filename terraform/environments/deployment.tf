@@ -187,7 +187,7 @@ resource "google_cloud_run_service" "chat_push_gateway" {
       volumes {
         name = "apns_keyfile"
         secret {
-          secret_name = local.environment_name == "production" ? "APNS_KEYFILE_PRODUCTION" : "APNS_KEYFILE_PRODUCTION"
+          secret_name = local.environment_name == "production" ? "APNS_KEYFILE_PRODUCTION" : "APNS_KEYFILE_STAGING"
           items {
             key  = "latest"
             path = "apns-keyfile.p8" # relative to mount_path in volume_mounts
