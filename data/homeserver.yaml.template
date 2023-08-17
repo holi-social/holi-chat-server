@@ -85,4 +85,4 @@ rc_login:
     per_second: 0.1
     burst_count: 5
 ip_range_whitelist:
-  - '${HOLI_CHAT_IP_RANGE_WHITELIST}'
+  ${HOLI_CHAT_IP_RANGE_WHITELIST}
