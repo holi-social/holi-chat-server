@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const http2 = require('http2');
 
 // follows https://docs.expo.dev/push-notifications/sending-notifications-custom/#apns-server
-// currently runs into a HTTP 400 BAD REQUEST
 
 const IS_PRODUCTION = true
 
