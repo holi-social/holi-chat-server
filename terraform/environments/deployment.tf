@@ -184,10 +184,24 @@ resource "google_cloud_run_service" "chat_push_gateway" {
   template {
     spec {
       service_account_name = data.terraform_remote_state.holi_chat_server_common_state.outputs.cloud_run_service_account_email
+      volumes {
+        name = "apns_keyfile"
+        secret {
+          secret_name = local.environment_name == "production" ? "APNS_KEYFILE_PRODUCTION" : "APNS_KEYFILE_STAGING"
+          items {
+            key  = "latest"
+            path = "apns-keyfile.p8" # relative to mount_path in volume_mounts
+          }
+        }
+      }
       containers {
         image = "${data.terraform_remote_state.holi_infra_state.outputs.artifact_registry_location}/holi-chat-push-gateway:${var.image_tag}"
         ports {
           container_port = 5000
+        }
+        volume_mounts {
+          mount_path = "/apns"
+          name       = "apns_keyfile"
         }
         # TODO consider adding resource limits
         env {
@@ -196,6 +210,40 @@ resource "google_cloud_run_service" "chat_push_gateway" {
             secret_key_ref {
               key  = "latest"
               name = local.environment_name == "production" ? "HOLI_CHAT_PUSH_GATEWAY_FCM_API_KEY_PRODUCTION" : "HOLI_CHAT_PUSH_GATEWAY_FCM_API_KEY_STAGING"
+            }
+          }
+        }
+        env {
+          name = "APNS_KEYFILE"
+          value = "/apns/apns-keyfile.p8" # see volume_mounts and volumes
+        }
+        env {
+          name = "APNS_KEY_ID"
+          value_from {
+            secret_key_ref {
+              key  = "latest"
+              name = local.environment_name == "production" ? "APNS_KEY_ID_PRODUCTION" : "APNS_KEY_ID_STAGING"
+            }
+          }
+        }
+        env {
+          name = "APNS_TEAM_ID"
+          value_from {
+            secret_key_ref {
+              key  = "latest"
+              name = local.environment_name == "production" ? "APNS_TEAM_ID_PRODUCTION" : "APNS_TEAM_ID_STAGING"
+            }
+          }
+        }
+        env {
+          name = "APNS_TOPIC"
+          value_from {
+            secret_key_ref {
+              key  = "latest"
+              # must be identical to app ID
+              # could have a suffix based on the type of push notification
+              # see https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/sending_notification_requests_to_apns
+              name = local.environment_name == "production" ? "APNS_TOPIC_PRODUCTION" : "APNS_TOPIC_STAGING"
             }
           }
         }

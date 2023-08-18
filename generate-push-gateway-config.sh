@@ -1,2 +1,2 @@
 #!/bin/sh
-envsubst < ./sygnal.yaml.template > ./sygnal.yaml
+envsubst < ./data-push-gateway/sygnal.yaml.template > ./data-push-gateway/sygnal.yaml

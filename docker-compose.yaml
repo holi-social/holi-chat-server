@@ -22,11 +22,13 @@ services:
       - chat-push-gateway
 
   chat-push-gateway:
-    image: matrixdotorg/sygnal
+    image: gitlab.holi.team:5050/app/holi-chat-server/sygnal_pushkey_fix:latest
     container_name: chat-push-gateway
     restart: always
+    env_file:
+      - ./.envrc-push-gateway.local
     volumes:
-      - ./sygnal.yaml:/sygnal.yaml
+      - ./data-push-gateway:/data
     ports:
       - 8050:5000
     networks:

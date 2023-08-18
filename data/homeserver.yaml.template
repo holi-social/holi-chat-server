@@ -29,7 +29,7 @@ oidc_providers:
     scopes: ["openid", "profile"]
     user_mapping_provider:
       config:
-        localpart_template: '{{ user.name|lower|replace(" ", "_") }}'
+        localpart_template: '{{ user.identity }}'
         display_name_template: "{{ user.name }}"
     backchannel_logout_enabled: true # Optional
 
@@ -64,3 +64,25 @@ jwt_config:
     }
   algorithm: "RS256"
   subject_claim: "ident"
+
+rc_message:
+  per_second: 2
+  burst_count: 20
+rc_registration:
+  per_second: 2
+  burst_count: 10
+rc_registration_token_validity:
+  per_second: 2
+  burst_count: 10
+rc_login:
+  address:
+    per_second: 2
+    burst_count: 10
+  account:
+    per_second: 2
+    burst_count: 10
+  failed_attempts:
+    per_second: 0.1
+    burst_count: 5
+ip_range_whitelist:
+  ${HOLI_CHAT_IP_RANGE_WHITELIST}
