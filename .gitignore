@@ -7,3 +7,4 @@ media_store
 apns-test/node_modules/
 data-push-gateway/apns_keyfile_staging.p8
 apns-test/apns_keyfile_staging.p8
+.idea/

@@ -55,11 +55,15 @@ request.setEncoding('utf8');
 
 request.write(
   JSON.stringify({
+    // https://docs.expo.dev/push-notifications/sending-notifications-custom/#ios
     aps: {
       alert: {
         title: "📧 You've got mail!",
+        subtitle: "With an optional subtitle!",
         body: 'Hello world! 🌐',
       },
+      badge: 0,
+      // thread-id might also be helpful
     },
     experienceId: '@holistic-foundation/projectholi', // correct
     scopeKey: '@holistic-foundation/projectholi', // correct
