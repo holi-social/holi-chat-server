@@ -127,7 +127,7 @@ production_deploy:
   environment:
     name: production
     deployment_tier: production
-    url: https://production.chat.holi.social
+    url: https://chat.holi.social
   variables:
     ENVIRONMENT_ID: production
   only:
