@@ -1,6 +1,9 @@
 # simple script to test pushing a message to Sygnal locally
 
-curl -i -H "Content-Type: application/json" --request POST -d '@-' http://localhost:8050/_matrix/push/v1/notify <<EOF
+#export URL=http://localhost:8050/_matrix/push/v1/notify
+export URL=https://staging-push.chat.holi.social/_matrix/push/v1/notify
+
+curl -i -H "Content-Type: application/json" --request POST -d '@-' $URL <<EOF
 {
 	"notification": {
 		"event_id": "\$3957tyerfgewrf384",
