@@ -181,8 +181,6 @@ resource "google_cloud_run_service" "chat_push_gateway" {
   # https://github.com/hashicorp/terraform-provider-google/issues/5898
   autogenerate_revision_name = true
 
-  ingress = "INGRESS_TRAFFIC_INTERNAL_ONLY"
-
   template {
     spec {
       service_account_name = data.terraform_remote_state.holi_chat_server_common_state.outputs.cloud_run_service_account_email
@@ -257,6 +255,7 @@ resource "google_cloud_run_service" "chat_push_gateway" {
       annotations = {
         "autoscaling.knative.dev/minScale" = local.environment == "production" ? "1" : "0"
         "autoscaling.knative.dev/maxScale" = local.environment == "production" ? "1" : "1"
+        "run.googleapis.com/ingress" = "internal"
       }
     }
   }
