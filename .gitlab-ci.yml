@@ -74,7 +74,7 @@ staging_deploy:
   environment:
     name: staging
     deployment_tier: staging
-    url: https://staging.chat.holi.social
+    url: https://development-chat.holi.social
   variables:
     ENVIRONMENT_ID: staging
   only:
