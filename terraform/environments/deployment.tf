@@ -327,3 +327,20 @@ resource "google_cloud_run_service_iam_policy" "chat_server" {
 
   policy_data = data.google_iam_policy.chat_server.policy_data
 }
+
+data "google_iam_policy" "chat_push_gateway" {
+  binding {
+    role = "roles/run.invoker"
+    members = [
+      "allUsers",
+    ]
+  }
+}
+
+resource "google_cloud_run_service_iam_policy" "chat_push_gateway" {
+  location = google_cloud_run_service.chat_push_gateway.location
+  project  = google_cloud_run_service.chat_push_gateway.project
+  service  = google_cloud_run_service.chat_push_gateway.name
+
+  policy_data = data.google_iam_policy.chat_push_gateway.policy_data
+}
