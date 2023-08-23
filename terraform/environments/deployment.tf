@@ -60,11 +60,11 @@ resource "google_cloud_run_service" "chat_server" {
           value = local.environment_name == "production" ? "https://auth.holi.social" : "https://dev-auth.holi.social"
         }
         env {
-          name = "HOLI_CHAT_DB_HOST"
+          name  = "HOLI_CHAT_DB_HOST"
           value = local.environment_name == "production" ? data.terraform_remote_state.holi_infra_state.outputs.database_ip_address_production : data.terraform_remote_state.holi_infra_state.outputs.database_ip_address_development
         }
         env {
-          name = "HOLI_CHAT_DB_NAME"
+          name  = "HOLI_CHAT_DB_NAME"
           value = local.environment_name == "production" ? "holi-chat-production" : "holi-chat-development"
         }
         env {
@@ -214,7 +214,7 @@ resource "google_cloud_run_service" "chat_push_gateway" {
           }
         }
         env {
-          name = "APNS_KEYFILE"
+          name  = "APNS_KEYFILE"
           value = "/apns/apns-keyfile.p8" # see volume_mounts and volumes
         }
         env {
@@ -239,7 +239,7 @@ resource "google_cloud_run_service" "chat_push_gateway" {
           name = "APNS_TOPIC"
           value_from {
             secret_key_ref {
-              key  = "latest"
+              key = "latest"
               # must be identical to app ID
               # could have a suffix based on the type of push notification
               # see https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/sending_notification_requests_to_apns
@@ -255,6 +255,10 @@ resource "google_cloud_run_service" "chat_push_gateway" {
       annotations = {
         "autoscaling.knative.dev/minScale" = local.environment == "production" ? "1" : "0"
         "autoscaling.knative.dev/maxScale" = local.environment == "production" ? "1" : "1"
+        # Use the VPC Connector
+        "run.googleapis.com/vpc-access-connector" = data.terraform_remote_state.holi_infra_state.outputs.vpc_access_connector_name
+        # possible values: all-traffic/private-ranges-only(default) https://cloud.google.com/sdk/gcloud/reference/run/services/update#--vpc-egress
+        "run.googleapis.com/vpc-access-egress" = "private-ranges-only"
       }
     }
   }
