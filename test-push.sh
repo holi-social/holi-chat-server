@@ -3,8 +3,8 @@
 #export URL=http://localhost:8050/_matrix/push/v1/notify
 #export SERVERNAME=local.chat.holi.social
 
-export URL=https://staging-push.chat.holi.social/_matrix/push/v1/notify
-export SERVERNAME=staging.chat.holi.social
+export URL=https://development-chat-push.holi.social/_matrix/push/v1/notify
+export SERVERNAME=development-chat.holi.social
 
 curl -i -H "Content-Type: application/json" --request POST -d '@-' $URL <<EOF
 {
