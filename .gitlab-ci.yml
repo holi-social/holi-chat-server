@@ -69,47 +69,6 @@ build_docker:
     - echo "e2e tests against $CI_ENVIRONMENT_SLUG environment go here and against $API_BASE_URL"
     - terraform/scripts/wait-for-ssl.sh "https://${API_BASE_URL}"
 
-review_deploy:
-  extends: .deploy
-  environment:
-    name: review/$CI_COMMIT_REF_SLUG
-    url: https://$CI_ENVIRONMENT_SLUG.chat.holi.social
-    on_stop: review_destroy
-    auto_stop_in: 1 week
-  except:
-    - main
-    - production
-    - /^noenv\/.*/
-
-review_destroy:
-  stage: destroy
-  image:
-    name: "hashicorp/terraform:1.1.9"
-    # default entrypoint is terraform command, but we want to run shell scripts
-    entrypoint: ["/bin/sh", "-c"]
-  variables:
-    # has to be set to none for auto stop
-    GIT_STRATEGY: none
-  environment:
-    name: review/$CI_COMMIT_REF_SLUG
-    action: stop
-  dependencies: [] # explicitly disable artifact usage
-  script:
-    - export GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_CLOUD_SERVICE_ACCOUNT}
-    # branch may have been deleted, so we clone and checkout main
-    - git clone $CI_REPOSITORY_URL main-clone
-    - cd main-clone
-    - terraform/environments/scripts/destroy-env.sh $CI_ENVIRONMENT_SLUG
-  # can't use rules here: https://gitlab.com/gitlab-org/gitlab/-/issues/34077
-  when: manual
-  allow_failure: false
-  except:
-    - main
-    - production
-    - /^noenv\/.*/
-  resource_group: $CI_ENVIRONMENT_SLUG # never execute terraform in parallel on the same environment
-  interruptible: false
-
 staging_deploy:
   extends: .deploy
   environment:
@@ -127,7 +86,7 @@ production_deploy:
   environment:
     name: production
     deployment_tier: production
-    url: https://production.chat.holi.social
+    url: https://chat.holi.social
   variables:
     ENVIRONMENT_ID: production
   only:

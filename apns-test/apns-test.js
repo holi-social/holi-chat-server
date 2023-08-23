@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const http2 = require('http2');
 
 // follows https://docs.expo.dev/push-notifications/sending-notifications-custom/#apns-server
-// currently runs into a HTTP 400 BAD REQUEST
 
 const IS_PRODUCTION = true
 
@@ -55,11 +54,15 @@ request.setEncoding('utf8');
 
 request.write(
   JSON.stringify({
+    // https://docs.expo.dev/push-notifications/sending-notifications-custom/#ios
     aps: {
       alert: {
         title: "📧 You've got mail!",
+        subtitle: "With an optional subtitle!",
         body: 'Hello world! 🌐',
       },
+      badge: 0,
+      // thread-id might also be helpful
     },
     experienceId: '@holistic-foundation/projectholi', // correct
     scopeKey: '@holistic-foundation/projectholi', // correct

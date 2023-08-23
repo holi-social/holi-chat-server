@@ -1,15 +1,21 @@
 # simple script to test pushing a message to Sygnal locally
 
-curl -i -H "Content-Type: application/json" --request POST -d '@-' http://localhost:8050/_matrix/push/v1/notify <<EOF
+#export URL=http://localhost:8050/_matrix/push/v1/notify
+#export SERVERNAME=local.chat.holi.social
+
+export URL=https://staging-push.chat.holi.social/_matrix/push/v1/notify
+export SERVERNAME=staging.chat.holi.social
+
+curl -i -H "Content-Type: application/json" --request POST -d '@-' $URL <<EOF
 {
 	"notification": {
 		"event_id": "\$3957tyerfgewrf384",
-			"room_id": "!OCJHQnWSFaSRPFBejq:local.chat.holi.social",
+			"room_id": "!OCJHQnWSFaSRPFBejq:$SERVERNAME",
 			"type": "m.room.message",
-			"sender": "@danielinoio:local.chat.holi.social",
+			"sender": "@danielinoio:$SERVERNAME",
 			"sender_display_name": "Daniel Holi",
 			"room_name": "Mission Control",
-			"room_alias": "#mission-control:local.chat.holi.social",
+			"room_alias": "#mission-control:$SERVERNAME",
 			"prio": "high",
 			"content": {
 				"msgtype": "m.text",
@@ -22,9 +28,17 @@ curl -i -H "Content-Type: application/json" --request POST -d '@-' http://localh
 			"devices": [
 			{
         "app_id": "social.holi.ios",
-        "pushkey": "fd3ef01c3a49c80d8e09a92c197585db9121e53e162ec1dfc09a050473d91198",
+        "pushkey": "76c2d0d9525d163d43ef00b2555a516144c8ffc6edd1eb10e2c5e1839c10f7dc",
         "pushkey_ts": 12345678,
-        "data": {"url":"http://chat-push-gateway:5000/_matrix/push/v1/notify","default_payload":{"title":"holi Chat","message":"You have a new message or invitation.","experienceId":"@holistic-foundation/projectholi","scopeKey":"@holistic-foundation/projectholi"}}
+        "data": {
+          "url":"$URL",
+          "default_payload": {
+            "title": "holi Chat",
+            "message": "You have a new message or invitation.",
+            "experienceId": "@holistic-foundation/projectholi",
+            "scopeKey": "@holistic-foundation/projectholi"
+          }
+        }
       }
     ]
   }
