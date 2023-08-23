@@ -128,6 +128,7 @@ resource "google_cloud_run_service" "chat_server" {
         # Use the VPC Connector
         "run.googleapis.com/vpc-access-connector" = data.terraform_remote_state.holi_infra_state.outputs.vpc_access_connector_name
         # possible values: all-traffic/private-ranges-only(default) https://cloud.google.com/sdk/gcloud/reference/run/services/update#--vpc-egress
+        # this needs to be set to all-traffic in order to route a cloud run url correctly, since it does resolve to a non-private ip address.
         "run.googleapis.com/vpc-access-egress" = "all-traffic"
       }
     }
