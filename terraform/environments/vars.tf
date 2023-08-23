@@ -9,3 +9,9 @@ locals {
   # e.g. staging-push.chat.holi.social and production-push.chat.holi.social
   chat_push_gateway_dns_name = "${trimsuffix(substr(local.environment, 0, 29), ".-")}-push.${data.terraform_remote_state.holi_chat_server_common_state.outputs.dns_chat_server_domain}"
 }
+
+# in CI, this is set via scripts/create-or-update-env.sh 
+variable "image_tag" {
+  type     = string
+  nullable = false
+}
