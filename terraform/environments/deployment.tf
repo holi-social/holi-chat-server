@@ -262,6 +262,21 @@ resource "google_cloud_run_service" "chat_push_gateway" {
       }
     }
   }
+
+  # only accept traffic from the internal network, not from the internet
+  metadata {
+    annotations = {
+      # possible values: all/internal/internal-and-cloud-load-balancing https://cloud.google.com/sdk/gcloud/reference/run/services/update#--ingress
+      "run.googleapis.com/ingress" = "internal"
+    }
+  }
+
+  traffic {
+    percent         = 100
+    latest_revision = true
+  }
+
+  depends_on = [google_project_service.service]
 }
 
 resource "google_cloud_run_domain_mapping" "holi_social_chat_server" {
