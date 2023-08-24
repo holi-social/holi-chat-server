@@ -29,7 +29,7 @@ resource "google_cloud_run_service" "chat_server" {
         }
         env {
           name  = "HOLI_CHAT_SERVER_NAME"
-          value = "${local.environment_name}.chat.holi.social"
+          value = local.environment_name == "production" ? "holi.social" : "development-chat.holi.social"
         }
         env {
           name  = "ORY_BASE_URL"
