@@ -106,6 +106,15 @@ resource "google_cloud_run_service" "chat_server" {
             }
           }
         }
+        env {
+          name = "HOLI_CHAT_ORY_PUBLIC_JWT_KEYS"
+          value_from {
+            secret_key_ref {
+              key  = "latest"
+              name = local.environment_name == "production" ? "HOLI_CHAT_ORY_PUBLIC_JWT_KEYS_PRODUCTION" : "HOLI_CHAT_ORY_PUBLIC_JWT_KEYS_DEVELOPMENT"
+            }
+          }
+        }
         resources {
           limits = {
             # cpu can only be scaled down to 1000m as long as container_concurrency is set to != 1
