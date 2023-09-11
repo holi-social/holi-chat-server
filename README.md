@@ -36,7 +36,7 @@ docker login gitlab.holi.team:5050
 10. Start the server by running the following command:
 
 ```
-docker-compose up -d
+docker compose up -d
 ```
 
 This will start the server in the background and you can access the application by navigating to [https://local.chat.holi.social](https://local.chat.holi.social) in your web browser.
