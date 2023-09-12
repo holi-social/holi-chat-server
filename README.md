@@ -8,31 +8,32 @@ To run Holi Chat Server locally, follow these steps:
 
 1. Clone the repository.
 2. Navigate to the project directory using a terminal or command prompt.
-3. Fill your .envrc.local file with the following information:
-
-```
-export HOLI_CHAT_ORY_CLIENT_ID=<from Passbolt>
-export HOLI_CHAT_ORY_CLIENT_SECRET=<from Passbolt>
-export HOLI_CHAT_REGISTRATION_SHARED_SECRET=<any random string>
-export HOLI_CHAT_MACAROON_SECRET_KEY=<any random string>
-export HOLI_CHAT_FORM_SECRET=<any random string>
-```
-
-4. Run the configuration script by running the following command:
+3. Fill your .envrc.local and .envrc-push-gateway.local file with secrets from passbolt
+4. Create the file _data-push-gateway/apns_keyfile_staging.p8_ and fill it with the secret. Manually format it so that it looks like a ssh key.
+5. Run the configuration scripts by running the following command:
 
 ```
 ./generate-homeserver-config.sh
+./generate-push-gateway-config.sh
 ```
 
 This will generate a default configuration file for your server.
 
-5. Add `local.chat.holi.social` entry to your `/etc/hosts` file as follows:
+7. Add `local.chat.holi.social` entry to your `/etc/hosts` file as follows:
 
 ```
 127.0.0.1 local.chat.holi.social
 ```
 
-6. Start the server by running the following command:
+8. Authenticate Docker with our Gitlab Container Registry to be able to pull our [custom sygnal image](https://gitlab.holi.team/app/holi-chat-server/container_registry)
+You will need to create a personalized [gitlab access token](https://gitlab.holi.team/app/holi-chat-server/-/settings/access_tokens) with _read_registry_ rights
+
+9. 
+```
+docker login gitlab.holi.team:5050
+```
+
+10. Start the server by running the following command:
 
 ```
 docker-compose up -d
