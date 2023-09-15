@@ -20,6 +20,7 @@ database:
     port: 5432
     cp_min: 5
     cp_max: 10
+    cp_reconnect: true
 oidc_providers:
   - idp_id: ory
     idp_name: "holi"
