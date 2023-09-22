@@ -119,11 +119,11 @@ resource "google_cloud_run_service" "chat_server" {
           limits = {
             # cpu can only be scaled down to 1000m as long as container_concurrency is set to != 1
             cpu    = local.environment == "production" ? "1000m" : "1000m"
-            memory = local.environment == "production" ? "512Mi" : "256Mi"
+            memory = local.environment == "production" ? "1024Mi" : "512Mi"
           }
           requests = {
             cpu    = local.environment == "production" ? "1000m" : "10m"
-            memory = local.environment == "production" ? "512Mi" : "256Mi"
+            memory = local.environment == "production" ? "1024Mi" : "512Mi"
           }
         }
       }
@@ -133,7 +133,7 @@ resource "google_cloud_run_service" "chat_server" {
     metadata {
       annotations = {
         "autoscaling.knative.dev/minScale" = local.environment == "production" ? "1" : "0"
-        "autoscaling.knative.dev/maxScale" = local.environment == "production" ? "10" : "1"
+        "autoscaling.knative.dev/maxScale" = local.environment == "production" ? "1" : "1"
         # Use the VPC Connector
         "run.googleapis.com/vpc-access-connector" = data.terraform_remote_state.holi_infra_state.outputs.vpc_access_connector_name
         # possible values: all-traffic/private-ranges-only(default) https://cloud.google.com/sdk/gcloud/reference/run/services/update#--vpc-egress
