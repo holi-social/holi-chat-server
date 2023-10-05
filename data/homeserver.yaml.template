@@ -11,7 +11,6 @@ listeners:
         compress: false
 database:
   name: psycopg2
-  txn_limit: 0
   args:
     user: ${HOLI_CHAT_DB_USER}
     password: ${HOLI_CHAT_DB_PASSWORD}
