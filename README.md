@@ -41,6 +41,10 @@ docker compose up -d
 
 This will start the server in the background and you can access the application by navigating to [https://local.chat.holi.social](https://local.chat.holi.social) in your web browser.
 
+11. Execute the create-synapse-admin-user.sh command with URL http://127.0.0.1:8008 and secret set in .envrc.local HOLI_CHAT_REGISTRATION_SHARED_SECRET for holi-chat-integration to work properly.
+
+12. Starting an element client
+
 You can run a local element web client like this: 
 ```
 docker run -p 81:80 vectorim/element-web
