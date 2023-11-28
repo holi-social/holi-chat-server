@@ -33,6 +33,12 @@ oidc_providers:
         display_name_template: "{{ user.name }}"
     backchannel_logout_enabled: true # Optional
 
+enable_registration: false
+enable_set_displayname: false
+enable_set_avatar_url: false
+enable_3pid_changes: false
+password_config:
+  enabled: false
 log_config: "/data/holi.chat.server.log.config"
 media_store_path: /data/media_store
 registration_shared_secret: ${HOLI_CHAT_REGISTRATION_SHARED_SECRET}
