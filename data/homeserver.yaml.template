@@ -20,6 +20,9 @@ database:
     cp_min: 5
     cp_max: 10
     cp_reconnect: true
+    keepalives_idle: 10 # seconds of inactivity after which TCP should send a keepalive message to the server
+    keepalives_interval: 10 # the number of seconds after which a TCP keepalive message that is not acknowledged by the server should be retransmitted    
+    keepalives_count: 3 # the number of TCP keepalives that can be lost before the client's connection to the server is considered dead
 oidc_providers:
   - idp_id: ory
     idp_name: "holi"
