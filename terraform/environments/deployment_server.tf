@@ -122,7 +122,7 @@ resource "google_cloud_run_service" "chat_server" {
             memory = local.environment == "production" ? "1024Mi" : "1024Mi"
           }
           requests = {
-            cpu    = local.environment == "production" ? "1000m" : "10m"
+            cpu    = local.environment == "production" ? "1000m" : "1000m"
             memory = local.environment == "production" ? "1024Mi" : "1024Mi"
           }
         }
