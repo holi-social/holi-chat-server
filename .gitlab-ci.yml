@@ -12,7 +12,7 @@ default:
     - env
   interruptible: true
   tags:
-    - holi-small # build on smaller machine
+    - 1cpu-4gb # build on smaller machine
 
 build_docker:
   image: docker:20.10
