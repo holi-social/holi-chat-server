@@ -81,6 +81,11 @@ resource "google_cloud_run_service" "chat_push_gateway" {
             }
           }
         }
+        liveness_probe {
+          http_get {
+            path = "/health"
+          }
+        }
       }
       container_concurrency = 0 # 0 means thread safe, no restriction on max concurrency
     }
