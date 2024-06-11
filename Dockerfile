@@ -1,6 +1,6 @@
 FROM matrixdotorg/synapse
 
-RUN apt-get update && apt-get install -y gettext-base
+RUN apt-get update && apt-get upgrade -y && apt-get install -y gettext-base
 
 COPY data /data
 COPY start.sh /start.sh

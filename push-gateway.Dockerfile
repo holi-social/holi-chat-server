@@ -1,6 +1,6 @@
-FROM gitlab.holi.team:5050/app/holi-chat-server/sygnal_pushkey_fix:latest
+FROM matrixdotorg/sygnal
 
-RUN apt-get update && apt-get install -y gettext-base
+RUN apt-get update && apt-get upgrade -y && apt-get install -y gettext-base
 
 COPY data-push-gateway/sygnal.yaml.template /data/sygnal.yaml.template
 COPY generate-push-gateway-config.sh /generate-push-gateway-config.sh
