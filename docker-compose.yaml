@@ -1,7 +1,6 @@
 version: "3"
 
 services:
-
   chat-server:
     image: matrixdotorg/synapse:latest
     container_name: chat-server
@@ -22,7 +21,7 @@ services:
       - chat-push-gateway
 
   chat-push-gateway:
-    image: gitlab.holi.team:5050/app/holi-chat-server/sygnal_pushkey_fix:latest
+    image: matrixdotorg/sygnal:latest
     container_name: chat-push-gateway
     restart: always
     env_file:
