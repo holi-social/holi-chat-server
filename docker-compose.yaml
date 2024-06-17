@@ -1,7 +1,6 @@
 version: "3"
 
 services:
-
   chat-server:
     image: matrixdotorg/synapse:latest
     container_name: chat-server
