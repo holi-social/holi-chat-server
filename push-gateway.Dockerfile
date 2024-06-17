@@ -1,4 +1,4 @@
-FROM gitlab.holi.team:5050/app/holi-chat-server/sygnal_pushkey_fix:latest
+FROM matrixdotorg/sygnal
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y gettext-base
 
