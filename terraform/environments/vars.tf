@@ -8,6 +8,8 @@ locals {
   dns_name = local.environment == "production" ? "chat.${data.terraform_remote_state.holi_infra_state.outputs.dns_sld_zone_domain}" : "development-chat.${data.terraform_remote_state.holi_infra_state.outputs.dns_sld_zone_domain}"
   # e.g. development-chat-push.holi.social and chat-push.holi.social
   chat_push_gateway_dns_name = local.environment == "production" ? "chat-push.${data.terraform_remote_state.holi_infra_state.outputs.dns_sld_zone_domain}" : "development-chat-push.${data.terraform_remote_state.holi_infra_state.outputs.dns_sld_zone_domain}"
+
+  default_region = data.terraform_remote_state.holi_infra_state.outputs.default_region
 }
 
 # in CI, this is set via scripts/create-or-update-env.sh 
