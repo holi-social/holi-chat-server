@@ -17,10 +17,10 @@ default:
     - 1cpu-4gb # build on smaller machine
 
 build_docker:
-  image: 'europe-north1-docker.pkg.dev/holi-shared/docker-hub-remote/docker:20.10'
+  image: 'europe-north1-docker.pkg.dev/holi-shared/docker-hub-remote/docker:27'
   stage: "build"
   services:
-    - docker:20.10-dind
+    - 'docker:27-dind'
   variables:
     # this could be fetched via terraform output ("gcr_location" in infra project), but then we would need an extra job for terraform
     ARTIFACT_IMAGE: 'europe-north1-docker.pkg.dev/holi-shared/docker/holi-chat-server'
