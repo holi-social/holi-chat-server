@@ -140,6 +140,7 @@ resource "google_cloud_run_service" "chat_server" {
         # this needs to be set to all-traffic in order to route a cloud run url correctly, since it does resolve to a non-private ip address.
         "run.googleapis.com/vpc-access-egress" = "all-traffic"
       }
+      # labels set on the revision level
       labels = {
         "environment_type" = local.environment_type
         "holi_service"     = "chat-server"
@@ -152,6 +153,11 @@ resource "google_cloud_run_service" "chat_server" {
     annotations = {
       # possible values: all/internal/internal-and-cloud-load-balancing https://cloud.google.com/sdk/gcloud/reference/run/services/update#--ingress
       "run.googleapis.com/ingress" = "all"
+    }
+    # labels set on the service level
+    labels = {
+      "environment_type" = local.environment_type
+      "holi_service"     = "chat-server"
     }
   }
 
