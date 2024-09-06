@@ -207,7 +207,9 @@ apps:
   #
   social.holi:
     type: gcm
-    api_key: ${HOLI_CHAT_PUSH_GATEWAY_FCM_API_KEY}
+    api_version: v1
+    project_id: holi-shared
+    service_account_file: ${FCM_KEYFILE}
   #
   #  # This is the maximum number of connections to GCM servers at any one time
   #  # the default is 20.

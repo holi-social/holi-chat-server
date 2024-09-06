@@ -1,10 +1,9 @@
 # ========= SYGNAL PUSH GATEWAY CONFIGURATION =========
 export SYGNAL_CONF=/data/sygnal.yaml
 
-# API key for Firebase Cloud Messaging
-export HOLI_CHAT_PUSH_GATEWAY_FCM_API_KEY=
-
 export APNS_KEYFILE=/data/apns_keyfile_staging.p8
 export APNS_KEY_ID=
 export APNS_TEAM_ID=
 export APNS_TOPIC=
+
+export FCM_KEYFILE=
