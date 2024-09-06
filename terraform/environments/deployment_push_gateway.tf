@@ -28,6 +28,16 @@ resource "google_cloud_run_service" "chat_push_gateway" {
           }
         }
       }
+      volumes {
+        name = "fcm_keyfile"
+        secret {
+          secret_name = local.environment_name == "production" ? "FCM_KEYFILE_PRODUCTION" : "FCM_KEYFILE_STAGING"
+          items {
+            key  = "latest"
+            path = "fcm-keyfile.json" # relative to mount_path in volume_mounts
+          }
+        }
+      }
       containers {
         image = "${data.terraform_remote_state.holi_infra_state.outputs.artifact_registry_location}/holi-chat-push-gateway:${var.image_tag}"
         ports {
@@ -36,6 +46,10 @@ resource "google_cloud_run_service" "chat_push_gateway" {
         volume_mounts {
           mount_path = "/apns"
           name       = "apns_keyfile"
+        }
+        volume_mounts {
+          mount_path = "/fcm"
+          name       = "fcm_keyfile"
         }
         # TODO consider adding resource limits
         env {
@@ -46,6 +60,10 @@ resource "google_cloud_run_service" "chat_push_gateway" {
               name = local.environment_name == "production" ? "HOLI_CHAT_PUSH_GATEWAY_FCM_API_KEY_PRODUCTION" : "HOLI_CHAT_PUSH_GATEWAY_FCM_API_KEY_STAGING"
             }
           }
+        }
+        env {
+          name  = "FCM_KEYFILE"
+          value = "/fcm/fcm-keyfile.json" # see volume_mounts and volumes
         }
         env {
           name  = "APNS_KEYFILE"
