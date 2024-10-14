@@ -9,7 +9,8 @@ To run Holi Chat Server locally, follow these steps:
 1. Clone the repository.
 2. Navigate to the project directory using a terminal or command prompt.
 3. Fill your .envrc.local and .envrc-push-gateway.local file with secrets from passbolt
-4. Create the file _data-push-gateway/apns_keyfile_staging.p8_ and fill it with the secret. Manually format it so that it looks like a ssh key.
+4. Create the file _data-push-gateway/apns_keyfile_staging.p8_ and fill it with the "APNS_KEYFILE_STAGING" secret from Passbolt. Manually format it so that it looks like a ssh key.
+5. Create the file _data-push-gateway/fcm_keyfile.json_ and fill it with the "FCM Keyfile" secret from Passbolt.
 5. Run the configuration scripts by running the following command:
 
 ```
