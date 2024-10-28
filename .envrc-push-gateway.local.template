@@ -6,4 +6,4 @@ export APNS_KEY_ID=
 export APNS_TEAM_ID=
 export APNS_TOPIC=
 
-export FCM_KEYFILE=
+export FCM_KEYFILE=/data/fcm_keyfile.json
