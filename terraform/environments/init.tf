@@ -23,9 +23,11 @@ data "terraform_remote_state" "holi_chat_server_common_state" {
 
 # provider google including beta features
 provider "google" {
-  region = local.default_region
+  project = "holi-shared" # string, because referencing google_project.holi_shared would be a cycle
+  region  = local.default_region
 }
 
 provider "google-beta" {
-  region = local.default_region
+  project = "holi-shared" # string, because referencing google_project.holi_shared would be a cycle
+  region  = local.default_region
 }

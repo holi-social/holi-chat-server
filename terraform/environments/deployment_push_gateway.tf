@@ -105,7 +105,7 @@ resource "google_cloud_run_service" "chat_push_gateway" {
           }
         }
       }
-      container_concurrency = 0 # 0 means thread safe, no restriction on max concurrency
+      container_concurrency = 80 # 0 means thread safe, no restriction on max concurrency
     }
     # template annotations: https://cloud.google.com/run/docs/reference/rpc/google.cloud.run.v1#revisiontemplate
     metadata {
