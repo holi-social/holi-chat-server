@@ -36,7 +36,7 @@ services:
       driver: "local"
 
   chat-db:
-    image: postgres
+    image: postgres:17
     container_name: chat-db
     restart: always
     volumes:
