@@ -127,7 +127,7 @@ resource "google_cloud_run_service" "chat_server" {
           }
         }
       }
-      container_concurrency = 0 # 0 means thread safe, no restriction on max concurrency
+      container_concurrency = 80 # 0 means thread safe, no restriction on max concurrency
     }
     # template annotations: https://cloud.google.com/run/docs/reference/rpc/google.cloud.run.v1#revisiontemplate
     metadata {
@@ -139,7 +139,7 @@ resource "google_cloud_run_service" "chat_server" {
         # possible values: all-traffic/private-ranges-only(default) https://cloud.google.com/sdk/gcloud/reference/run/services/update#--vpc-egress
         # this needs to be set to all-traffic in order to route a cloud run url correctly, since it does resolve to a non-private ip address.
         "run.googleapis.com/vpc-access-egress" = "all-traffic"
-        "run.googleapis.com/startup-cpu-boost"    = "true"
+        "run.googleapis.com/startup-cpu-boost" = "true"
       }
       # labels set on the revision level
       labels = {

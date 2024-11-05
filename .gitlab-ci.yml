@@ -28,15 +28,15 @@ build_docker:
     PUSH_GATEWAY_ARTIFACT_IMAGE: 'europe-north1-docker.pkg.dev/holi-shared/docker/holi-chat-push-gateway'
   script:
     - echo '===> building chat server image'
-    - docker pull $ARTIFACT_IMAGE || true # Allows us to use --cache-from, we need to tag with latest in the next command for this to work
-    - docker build --cache-from $ARTIFACT_IMAGE -t $ARTIFACT_IMAGE:latest -t $ARTIFACT_IMAGE:$CI_COMMIT_SHA -t $ARTIFACT_IMAGE:$CI_COMMIT_REF_SLUG .
-    - docker push $ARTIFACT_IMAGE:$CI_COMMIT_SHA # this is the tag that is used for deployment
-    - docker push $ARTIFACT_IMAGE:$CI_COMMIT_REF_SLUG # just for easily knowing which is the last image for a branch
+    - docker pull "$ARTIFACT_IMAGE" || true # Allows us to use --cache-from, we need to tag with latest in the next command for this to work
+    - docker build --cache-from "$ARTIFACT_IMAGE" -t "$ARTIFACT_IMAGE":latest -t "$ARTIFACT_IMAGE":"$CI_COMMIT_SHA" -t "$ARTIFACT_IMAGE":"$CI_COMMIT_REF_SLUG" .
+    - docker push "$ARTIFACT_IMAGE":"$CI_COMMIT_SHA" # this is the tag that is used for deployment
+    - docker push "$ARTIFACT_IMAGE":"$CI_COMMIT_REF_SLUG" # just for easily knowing which is the last image for a branch
     - echo '===> building push gateway image'
-    - docker pull $PUSH_GATEWAY_ARTIFACT_IMAGE || true # Allows us to use --cache-from, we need to tag with latest in the next command for this to work
-    - docker build --cache-from $PUSH_GATEWAY_ARTIFACT_IMAGE -t $PUSH_GATEWAY_ARTIFACT_IMAGE:latest -t $PUSH_GATEWAY_ARTIFACT_IMAGE:$CI_COMMIT_SHA -t $PUSH_GATEWAY_ARTIFACT_IMAGE:$CI_COMMIT_REF_SLUG -f push-gateway.Dockerfile .
-    - docker push $PUSH_GATEWAY_ARTIFACT_IMAGE:$CI_COMMIT_SHA # this is the tag that is used for deployment
-    - docker push $PUSH_GATEWAY_ARTIFACT_IMAGE:$CI_COMMIT_REF_SLUG # just for easily knowing which is the last image for a branch
+    - docker pull "$PUSH_GATEWAY_ARTIFACT_IMAGE" || true # Allows us to use --cache-from, we need to tag with latest in the next command for this to work
+    - docker build --cache-from "$PUSH_GATEWAY_ARTIFACT_IMAGE" -t "$PUSH_GATEWAY_ARTIFACT_IMAGE":latest -t "$PUSH_GATEWAY_ARTIFACT_IMAGE":"$CI_COMMIT_SHA" -t "$PUSH_GATEWAY_ARTIFACT_IMAGE":"$CI_COMMIT_REF_SLUG" -f push-gateway.Dockerfile .
+    - docker push "$PUSH_GATEWAY_ARTIFACT_IMAGE":"$CI_COMMIT_SHA" # this is the tag that is used for deployment
+    - docker push "$PUSH_GATEWAY_ARTIFACT_IMAGE":"$CI_COMMIT_REF_SLUG" # just for easily knowing which is the last image for a branch
 
 .deploy:
   stage: "deploy"
@@ -55,8 +55,8 @@ build_docker:
     #when: on_failure # can't do that for api base url, but can't define multiple artifacts
     expire_in: 1 week
   script:
-    - terraform/environments/scripts/create-or-update-env.sh $ENVIRONMENT_ID $CI_COMMIT_SHA
-    - echo "$(terraform/scripts/get-output.sh api_domain)" > $API_DOMAIN_PATH
+    - terraform/environments/scripts/create-or-update-env.sh "$ENVIRONMENT_ID" "$CI_COMMIT_SHA"
+    - echo "$(terraform/scripts/get-output.sh api_domain)" > "$API_DOMAIN_PATH"
   resource_group: $ENVIRONMENT_ID # never execute terraform in parallel on the same environment
   interruptible: false
 
@@ -64,8 +64,8 @@ build_docker:
   stage: "deploy"
   image: 'europe-north1-docker.pkg.dev/holi-shared/docker-hub-remote/archlinux:base'
   script:
-    - API_BASE_URL=`cat $API_DOMAIN_PATH`
-    - echo "e2e tests against $CI_ENVIRONMENT_SLUG environment go here and against $API_BASE_URL"
+    - API_BASE_URL=`cat "$API_DOMAIN_PATH"`
+    - echo "e2e tests against '$CI_ENVIRONMENT_SLUG' environment go here and against '$API_BASE_URL'"
     - terraform/scripts/wait-for-ssl.sh "https://${API_BASE_URL}"
 
 staging_deploy:
