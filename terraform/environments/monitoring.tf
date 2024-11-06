@@ -1,7 +1,7 @@
 resource "google_monitoring_alert_policy" "chat_server_cpu_utilization" {
   count                 = local.environment == "production" ? 1 : 0
   display_name          = "COMO: Production chat server CPU utilization exceeded"
-  notification_channels = [data.terraform_remote_state.holi_infra_state.outputs.monitoring_notification_channel_rocket_chat_production_id]
+  notification_channels = [data.terraform_remote_state.holi_infra_monitoring_state.outputs.monitoring_notification_channel_rocket_chat_production_id]
   severity              = "WARNING"
   alert_strategy {
     auto_close = "86400s" # 1 day
@@ -41,7 +41,7 @@ resource "google_monitoring_alert_policy" "chat_server_cpu_utilization" {
 resource "google_monitoring_alert_policy" "chat_server_memory_utilization" {
   count                 = local.environment == "production" ? 1 : 0
   display_name          = "COMO: ${local.environment} chat server memory utilization exceeded"
-  notification_channels = [data.terraform_remote_state.holi_infra_state.outputs.monitoring_notification_channel_rocket_chat_production_id]
+  notification_channels = [data.terraform_remote_state.holi_infra_monitoring_state.outputs.monitoring_notification_channel_rocket_chat_production_id]
   severity              = "WARNING"
   alert_strategy {
     auto_close = "86400s" # 1 day
