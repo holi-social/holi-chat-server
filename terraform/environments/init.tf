@@ -13,6 +13,14 @@ data "terraform_remote_state" "holi_infra_state" {
   }
 }
 
+data "terraform_remote_state" "holi_infra_monitoring_state" {
+  backend = "gcs"
+  config = {
+    bucket = "holi-shared-terraform-state"
+    prefix = "infra-monitoring"
+  }
+}
+
 data "terraform_remote_state" "holi_chat_server_common_state" {
   backend = "gcs"
   config = {
