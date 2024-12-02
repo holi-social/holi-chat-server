@@ -99,6 +99,11 @@ resource "google_cloud_run_service" "chat_push_gateway" {
             }
           }
         }
+        startup_probe {
+          http_get {
+            path = "/health"
+          }
+        }
         liveness_probe {
           http_get {
             path = "/health"
