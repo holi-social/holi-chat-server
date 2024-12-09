@@ -32,11 +32,13 @@ build_docker:
     - docker build --cache-from "$ARTIFACT_IMAGE" -t "$ARTIFACT_IMAGE":latest -t "$ARTIFACT_IMAGE":"$CI_COMMIT_SHA" -t "$ARTIFACT_IMAGE":"$CI_COMMIT_REF_SLUG" .
     - docker push "$ARTIFACT_IMAGE":"$CI_COMMIT_SHA" # this is the tag that is used for deployment
     - docker push "$ARTIFACT_IMAGE":"$CI_COMMIT_REF_SLUG" # just for easily knowing which is the last image for a branch
+    - docker push "$ARTIFACT_IMAGE":latest # for caching the build
     - echo '===> building push gateway image'
     - docker pull "$PUSH_GATEWAY_ARTIFACT_IMAGE" || true # Allows us to use --cache-from, we need to tag with latest in the next command for this to work
     - docker build --cache-from "$PUSH_GATEWAY_ARTIFACT_IMAGE" -t "$PUSH_GATEWAY_ARTIFACT_IMAGE":latest -t "$PUSH_GATEWAY_ARTIFACT_IMAGE":"$CI_COMMIT_SHA" -t "$PUSH_GATEWAY_ARTIFACT_IMAGE":"$CI_COMMIT_REF_SLUG" -f push-gateway.Dockerfile .
     - docker push "$PUSH_GATEWAY_ARTIFACT_IMAGE":"$CI_COMMIT_SHA" # this is the tag that is used for deployment
     - docker push "$PUSH_GATEWAY_ARTIFACT_IMAGE":"$CI_COMMIT_REF_SLUG" # just for easily knowing which is the last image for a branch
+    - docker push "$PUSH_GATEWAY_ARTIFACT_IMAGE":latest # for caching the build
 
 .deploy:
   stage: "deploy"
