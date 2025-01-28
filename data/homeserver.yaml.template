@@ -83,3 +83,6 @@ rc_login:
     burst_count: 5
 ip_range_whitelist:
   ${HOLI_CHAT_IP_RANGE_WHITELIST}
+
+presence:
+  enabled: false
