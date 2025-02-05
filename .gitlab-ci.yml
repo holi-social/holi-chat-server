@@ -9,7 +9,7 @@ stages:
 default:
   before_script:
     - set -eu
-    - env
+    #- env
   interruptible: true
   tags:
     - holi-small # build on smaller machine
