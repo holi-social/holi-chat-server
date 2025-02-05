@@ -8,7 +8,7 @@ stages:
 
 default:
   before_script:
-    - set -eux
+    - set -eu
     - env
   interruptible: true
   tags:
