@@ -43,7 +43,7 @@ build_docker:
 .deploy:
   stage: "deploy"
   image:
-    name: 'europe-north1-docker.pkg.dev/holi-shared/docker-hub-remote/hashicorp/terraform:1.11.0'
+    name: 'europe-north1-docker.pkg.dev/holi-shared/docker-hub-remote/hashicorp/terraform:1.11.2'
     # default entrypoint is terraform command, but we want to run shell scripts
     entrypoint: ["/bin/sh", "-c"]
   variables:
@@ -58,17 +58,18 @@ build_docker:
     expire_in: 1 week
   script:
     - terraform/environments/scripts/create-or-update-env.sh "$ENVIRONMENT_ID" "$CI_COMMIT_SHA"
-    - echo "$(terraform/scripts/get-output.sh api_domain)" > "$API_DOMAIN_PATH"
+    - echo "$(terraform/environments/scripts/get-output.sh api_domain)" > "$API_DOMAIN_PATH"
   resource_group: $ENVIRONMENT_ID # never execute terraform in parallel on the same environment
   interruptible: false
 
-.e2e:
+.smoketest:
   stage: "deploy"
-  image: 'europe-north1-docker.pkg.dev/holi-shared/docker-hub-remote/archlinux:base'
+  image: 'europe-north1-docker.pkg.dev/holi-shared/docker/holi-docker/holi-k6-builder'
   script:
-    - API_BASE_URL=`cat "$API_DOMAIN_PATH"`
-    - echo "e2e tests against '$CI_ENVIRONMENT_SLUG' environment go here and against '$API_BASE_URL'"
-    - terraform/scripts/wait-for-ssl.sh "https://${API_BASE_URL}"
+    - API_DOMAIN=$(cat "$API_DOMAIN_PATH")
+    - terraform/environments/scripts/wait-for-ssl.sh "https://${API_DOMAIN}"
+    - BASE_URL="https://${API_DOMAIN}" k6 run smoketest/main.js
+    # TODO should/could we roll back the service to the last working revision on test failure?
 
 staging_deploy:
   extends: .deploy
@@ -81,6 +82,12 @@ staging_deploy:
   only:
     - main
 
+staging_smoketest:
+  extends: .smoketest
+  needs: ['staging_deploy']
+  only:
+    - main
+
 production_deploy:
   extends: .deploy
   allow_failure: false
@@ -90,5 +97,11 @@ production_deploy:
     url: https://chat.holi.social
   variables:
     ENVIRONMENT_ID: production
+  only:
+    - production
+
+production_smoketest:
+  extends: .smoketest
+  needs: ['production_deploy']
   only:
     - production
