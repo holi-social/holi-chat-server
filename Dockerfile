@@ -1,4 +1,4 @@
-FROM europe-north1-docker.pkg.dev/holi-shared/docker-hub-remote/matrixdotorg/synapse:v1.122.0
+FROM europe-north1-docker.pkg.dev/holi-shared/docker-hub-remote/matrixdotorg/synapse:v1.127.1
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y gettext-base
 
