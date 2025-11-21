@@ -1,4 +1,4 @@
-FROM europe-north1-docker.pkg.dev/holi-shared/docker-hub-remote/matrixdotorg/sygnal:v0.15.1
+FROM europe-north1-docker.pkg.dev/holi-shared/docker-hub-remote/matrixdotorg/sygnal:v0.17.0
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y gettext-base
 
